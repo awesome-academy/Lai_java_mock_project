@@ -20,9 +20,6 @@ public class Payment {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer user_id;
-
-    @Column(nullable = false)
     private String method;
 
     @Column(nullable = false)

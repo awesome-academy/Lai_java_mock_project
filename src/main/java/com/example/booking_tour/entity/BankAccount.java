@@ -20,9 +20,6 @@ public class BankAccount {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer user_id;
-
-    @Column(nullable = false)
     private String account_number;
 
     @Column(nullable = false)

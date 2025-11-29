@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="admin/layouts/auth :: layout(~{::title}, ~{::style}, ~{::section})">
+<head>
+    <title th:text="${title}">Login</title>
+    <style th:fragment="style">
+        .page-login__form {
+            position: relative;
+            max-width: 304px;
+            margin: 0 auto;
+            padding-top: 82px;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <form class="page-login__form" action="@{/admin/login}" method="post">
+        <div class="form-group">
+            <label for="login" class="control-label">Username</label>
+            <input name="login" required="" type="text" id="login" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input name="password" required="" type="password" id="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</section>
+
+</body>
+</html>

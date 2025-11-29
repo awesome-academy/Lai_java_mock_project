@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="admin/layouts/master :: layout(~{::title}, ~{::section})">
+<head>
+    <title th:text="${title}">Dashboard</title>
+</head>
+<body>
+
+<section>
+    <div class="panel panel-default">
+        <div class="panel-heading">Dashboard</div>
+        <div class="panel-body">
+            <p>Welcome to Admin Dashboard</p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

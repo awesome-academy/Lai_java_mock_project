@@ -20,12 +20,6 @@ public class Rating {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer user_id;
-
-    @Column(nullable = false)
-    private Integer tour_id;
-
-    @Column(nullable = false)
     private Integer rating;
 
     @Column(updatable = false)
