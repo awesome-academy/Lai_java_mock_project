@@ -30,6 +30,7 @@ public class UserSeeder implements CommandLineRunner {
             user.setEmail("admin@gmail.com");
             user.setPassword(passwordEncoder.encode("admin123"));
             user.setPhone("0387588688");
+            user.setRole(User.Role.ADMIN);
             user.setProvider(Provider.LOCAL);
             userRepository.saveAll(Arrays.asList(user));
 

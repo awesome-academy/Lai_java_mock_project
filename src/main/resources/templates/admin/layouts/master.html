@@ -6,30 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- BOOTSTRAP 3 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
 
 <div class="container-fluid">
+    <!-- SIDEBAR -->
     <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" th:replace="admin/layouts/sidebar :: sidebar"></div>
+    </div>
+    
 
-        <!-- SIDEBAR -->
-        <div class="col-sm-3 col-md-2 sidebar"
-             th:replace="admin/layouts/sidebar :: sidebar"></div>
+    <!-- MAIN CONTENT -->
+    <div class="main">
 
-        <!-- MAIN CONTENT -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <!-- HEADER -->
+        <div th:replace="admin/layouts/header :: header"></div>
 
-            <!-- HEADER -->
-            <div th:replace="admin/layouts/header :: header"></div>
+        <!-- CONTENT -->
+        <div th:replace="${content}"></div>
 
-            <!-- CONTENT -->
-            <div th:replace="${content}"></div>
+        <!-- FOOTER -->
+        <div th:replace="admin/layouts/footer :: footer"></div>
 
-            <!-- FOOTER -->
-            <div th:replace="admin/layouts/footer :: footer"></div>
-
-        </div>
     </div>
 </div>
 
