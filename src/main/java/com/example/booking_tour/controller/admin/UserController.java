@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String store(@Valid @ModelAttribute("userRequest") UserCreateRequest request,
+    public String store(@Valid @ModelAttribute UserCreateRequest request,
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes
     ) {

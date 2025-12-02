@@ -40,12 +40,10 @@
 <section>
     <form class="page-login__form" th:action="@{/admin/login}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <!-- Hiển thị lỗi khi login thất bại -->
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             <strong>Login failed!</strong> Invalid username or password.
         </div>
-        
-        <!-- Hiển thị thông báo khi logout thành công -->
+
         <div th:if="${param.logout}" class="alert alert-success" role="alert">
             You have been logged out successfully.
         </div>
