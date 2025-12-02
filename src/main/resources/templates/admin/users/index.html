@@ -98,7 +98,7 @@
     <div class="pull-right nav-tabs__search">
         <form class="form-inline">
             <div class="form-group">
-                <span class="input-group">
+                <!-- <span class="input-group">
                     <div class="form-control__with-clear">
                         <input placeholder="Search" name="usersSearch" type="text" id="usersSearch" class="form-control" value="">
                     </div>
@@ -107,7 +107,7 @@
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
-                </span>
+                </span> -->
             </div>
         </form>
     </div>
@@ -332,19 +332,6 @@
 
     // Document ready
     $(document).ready(function() {
-        var searchInput = document.getElementById('usersSearch');
-        if (searchInput) {
-            searchInput.addEventListener('keyup', function() {
-                var input = this.value.toLowerCase();
-                var rows = document.querySelectorAll('tbody tr');
-                
-                rows.forEach(function(row) {
-                    var text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(input) ? '' : 'none';
-                });
-            });
-        }
-
         $('#addUserModal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
         });
