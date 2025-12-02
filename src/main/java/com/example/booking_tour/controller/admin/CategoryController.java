@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,10 +37,13 @@ public class CategoryController {
     }
 
     @PostMapping("")
-    public String store(@Valid @ModelAttribute("categoryRequest") CategoryCreateRequest request,
-                        BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) {
+    public String store(@Valid @ModelAttribute CategoryCreateRequest request,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         try {
+            if (bindingResult.hasErrors()) {
+                throw new RuntimeException("Validation failed");
+            }
             categoryService.createCategory(request);
             redirectAttributes.addFlashAttribute("success", "Category created successfully!");
         } catch (RuntimeException e) {
@@ -51,16 +54,15 @@ public class CategoryController {
     }
 
     @PostMapping("/update/{categoryId}")
-    public String update(@ModelAttribute("categoryId") Long categoryId,
-                            @Valid @ModelAttribute CategoryCreateRequest request,
-                            BindingResult bindingResult,
-                            RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable("categoryId") Long categoryId,
+            @Valid @ModelAttribute CategoryCreateRequest request,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         try {
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
-            category.setName(request.getName());
-            category.setDescription(request.getDescription());
-            categoryRepository.save(category);
+            if (bindingResult.hasErrors()) {
+                throw new RuntimeException("Validation failed");
+            }
+            categoryService.updateCategory(categoryId, request);
             redirectAttributes.addFlashAttribute("success", "Category updated successfully!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -68,14 +70,14 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
 
-    @GetMapping("/delete/{categoryId}")
-    public String delete(@ModelAttribute("categoryId") Long categoryId,
-                         RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{categoryId}")
+    public String delete(@PathVariable("categoryId") Long categoryId,
+            RedirectAttributes redirectAttributes) {
         try {
-            categoryRepository.deleteById(categoryId);
+            categoryService.deleteCategory(categoryId);
             redirectAttributes.addFlashAttribute("success", "Category deleted successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());  
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/admin/categories";
     }

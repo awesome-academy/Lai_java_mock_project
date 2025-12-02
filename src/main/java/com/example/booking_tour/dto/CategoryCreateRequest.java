@@ -7,10 +7,9 @@ import lombok.Data;
 @Data
 public class CategoryCreateRequest {
     @NotBlank(message = "Name is required")
-    @Size(max = 255, message = "Name must be maximum 255 characters")
+    @Size(min = 2, max = 255, message = "Name must be between 2 and 255 characters")
     private String name;
 
     @NotBlank(message = "Description is required")
     private String description;
 }
-    

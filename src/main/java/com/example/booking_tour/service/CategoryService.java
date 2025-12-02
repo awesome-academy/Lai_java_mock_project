@@ -19,4 +19,16 @@ public class CategoryService {
         category.setDescription(request.getDescription());
         return categoryRepository.save(category);
     }
+
+    public Category updateCategory(Long id, CategoryCreateRequest request) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+        return categoryRepository.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
 }
