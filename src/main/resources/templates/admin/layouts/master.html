@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(titleFragment, content)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${titleFragment}">Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- BOOTSTRAP 3 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<div class="container-fluid">
+    <!-- SIDEBAR -->
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" th:replace="admin/layouts/sidebar :: sidebar"></div>
+    </div>
+    
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <!-- HEADER -->
+        <div th:replace="admin/layouts/header :: header"></div>
+
+        <!-- CONTENT -->
+        <div th:replace="${content}"></div>
+
+        <!-- FOOTER -->
+        <div th:replace="admin/layouts/footer :: footer"></div>
+
+    </div>
+</div>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>

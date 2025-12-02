@@ -20,10 +20,6 @@ public class TourImage {
     private Integer id;
 
     @Column(nullable = false)
-    @jakarta.validation.constraints.NotBlank(message = "Tour ID không được để trống")
-    private Integer tour_id;
-
-    @Column(nullable = false)
     @jakarta.validation.constraints.NotBlank(message = "Tên không được để trống")
     @jakarta.validation.constraints.Size(max = 255, message = "Tối đa 255 ký tự")
     private String image_url;

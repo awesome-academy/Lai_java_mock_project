@@ -20,15 +20,6 @@ public class Comment {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer review_id;
-
-    @Column(nullable = false)
-    private Integer user_id;
-
-    @Column(nullable = false)
-    private Integer parent_commnet_id;
-
-    @Column(nullable = false)
     private String content;
 
     @Column(updatable = false)
@@ -48,6 +39,6 @@ public class Comment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_commnet_id", nullable = false)
+    @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 }

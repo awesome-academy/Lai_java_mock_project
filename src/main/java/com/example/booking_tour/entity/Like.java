@@ -19,12 +19,6 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer review_id;
-
-    @Column(nullable = false)
-    private Integer user_id;
-
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime created_at;

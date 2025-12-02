@@ -18,9 +18,6 @@ public class Activity {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer user_id;
-
-    @Column(nullable = false)
     private String action;
 
     @Column(nullable = false)

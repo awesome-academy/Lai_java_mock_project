@@ -21,10 +21,6 @@ public class Tour {
     private Integer id;
 
     @Column(nullable = false)
-    @jakarta.validation.constraints.NotNull(message = "Category ID không được để trống")
-    private Integer category_id;
-
-    @Column(nullable = false)
     @jakarta.validation.constraints.NotBlank(message = "Tên tour không được để trống")
     @jakarta.validation.constraints.Size(max = 255, message = "Tối đa 255 ký tự")
     private String title;
