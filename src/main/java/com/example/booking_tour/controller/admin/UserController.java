@@ -41,6 +41,10 @@ public class UserController {
         RedirectAttributes redirectAttributes
     ) {
         try {
+            if (bindingResult.hasErrors()) {
+                redirectAttributes.addFlashAttribute("error", "Validation failed");
+                return "redirect:/admin/users";
+            }
             userService.createUser(request);
             redirectAttributes.addFlashAttribute("success", "User created successfully!");
         } catch (RuntimeException e) {
@@ -55,6 +59,10 @@ public class UserController {
                         BindingResult bindingResult,
                         RedirectAttributes redirectAttributes) {
         try {
+            if (bindingResult.hasErrors()) {
+                redirectAttributes.addFlashAttribute("error", "Validation failed");
+                return "redirect:/admin/users";
+            }
             userService.updateUser(request.getId(), request);
             redirectAttributes.addFlashAttribute("success", "User updated successfully!");
         } catch (RuntimeException e) {
@@ -69,6 +77,10 @@ public class UserController {
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
         try {
+            if (bindingResult.hasErrors()) {
+                redirectAttributes.addFlashAttribute("error", "Validation failed");
+                return "redirect:/admin/users";
+            }
             userService.updatePassword(request.getId(), request);
             redirectAttributes.addFlashAttribute("success", "Password updated successfully!");
         } catch (RuntimeException e) {

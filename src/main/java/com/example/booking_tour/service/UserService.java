@@ -7,6 +7,8 @@ import com.example.booking_tour.entity.User;
 import com.example.booking_tour.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.booking_tour.exception.EmailAlreadyExistsException;
+import com.example.booking_tour.exception.UserNotFoundException;
 
 import java.util.Optional;
 
@@ -23,7 +25,7 @@ public class UserService {
     
     public User createUser(UserCreateRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User user = new User();
@@ -32,20 +34,25 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(request.getPhone());
         user.setAvatar(request.getAvatar());
-        user.setRole(User.Role.valueOf(request.getRole()));
-        user.setProvider(User.Provider.valueOf(request.getProvider()));
+
+        try {
+            user.setRole(User.Role.valueOf(request.getRole()));
+            user.setProvider(User.Provider.valueOf(request.getProvider()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid role or provider value");
+        }
         
         return userRepository.save(user);
     }
     
     public User updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (!user.getEmail().equals(request.getEmail())) {
             Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
             if (existingUser.isPresent()) {
-                throw new RuntimeException("Email already exists");
+                throw new EmailAlreadyExistsException("Email already exists");
             }
         }
         
@@ -63,7 +70,7 @@ public class UserService {
     
     public void updatePassword(Long id, PasswordUpdateRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
@@ -71,6 +78,6 @@ public class UserService {
     
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }
