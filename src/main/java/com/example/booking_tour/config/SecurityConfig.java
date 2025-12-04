@@ -51,6 +51,9 @@ public class SecurityConfig {
             )
             .exceptionHandling(exception -> exception
                 .accessDeniedPage("/admin/login?error=forbidden")
+            )
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())  // Cho phép iframe từ cùng domain
             );
         
         return http.build();

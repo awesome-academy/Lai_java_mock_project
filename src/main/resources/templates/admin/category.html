@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-    th:replace="admin/layouts/master :: layout(~{::title}, ~{::section})">
+    th:replace="admin/layouts/master :: layout(~{::title}, ~{::section}, _)">
 
 <head>
     <title th:text="${title}">User Management</title>
@@ -82,7 +82,7 @@
                         <td th:text="${category.name}"></td>
                         <td th:text="${category.description}"></td>
                         <td th:text="${#temporals.format(category.created_at, 'dd/MM/yyyy HH:mm')}"></td>
-                        <td class="text-center">
+                        <td>
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-default dropdown-toggle" type="button"
                                     th:id="'dropdownMenu' + ${category.id}" data-toggle="dropdown" aria-haspopup="true"
