@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="admin/layouts/master :: layout(~{::title}, ~{::section}, ~{::script})">
+
+<head>
+    <title th:text="${title}">User Management</title>
+</head>
+
+<body>
+    <section>
+        <div th:if="${success}" class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <span th:text="${error}"></span>
+        </div>
+
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addTour"
+            aria-label="Add new category" onclick="resetForm()">
+            Add Tour
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="addTour" tabindex="-1" role="dialog"
+            aria-labelledby="addTourLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <form th:action="@{/admin/tours}" method="post" id="form-tour">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="addTourModalLabel">
+                                Add New Tour
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="category">Category <span class="text-danger">*</span></label>
+                                <select name="category_id" id="category" class="form-control">
+                                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title" required minlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="location" name="location" required minlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="duration_days">Duration Days <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="duration_days" name="duration_days" required minlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="price" name="price" required minlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="imageFiles">Images <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple>
+                                <input type="hidden" id="images" name="images">
+                            </div>
+                            <div class="form-group">
+                                <label for="thumbnailImage">Thumbnail <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="thumbnailImage" name="thumbnailImage">
+                                <input type="hidden" id="thumbnail" name="thumbnail">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <hr>
+        <div class="">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Thumbnail</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Duration Days</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tour : ${tours}">
+                        <td th:text="${tour.id}"></td>
+                        <td>
+                            <img th:src="${tour.thumbnail}" alt="Thumbnail" style="width: 100px; height: auto;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                        </td>
+                        <td th:text="${tour.title}"></td>
+                        <td th:text="${tour.category?.name ?: 'N/A'}"></td>
+                        <td th:text="${tour.location}"></td>
+                        <td th:text="${tour.duration_days}"></td>
+                        <td th:text="${tour.price}"></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-default dropdown-toggle" type="button"
+                                    th:id="'dropdownMenu' + ${tour.id}" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="true">
+                                    Action <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" th:attr="aria-labelledby='dropdownMenu' + ${tour.id}">
+                                    <li>
+                                        <a type="button" th:attr="data-tour-id=${tour.id}" id="editTour">
+                                            Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a type="button" th:attr="data-tour-id=${tour.id}" id="deleteTour">
+                                            Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>                      
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix"></div>
+    </section>
+    <script th:fragment="scripts">
+        initializeCKEditor('description');
+
+        let title = document.getElementById('title');
+        let description = document.getElementById('description');
+        let tourLocation = document.getElementById('location');
+        let duration_days = document.getElementById('duration_days');
+        let price = document.getElementById('price');
+        let thumbnail = document.getElementById('thumbnail');
+        let images = document.getElementById('images');
+        let addTourModalLabel = document.getElementById('addTourModalLabel');
+        let category = document.getElementById('category');
+        let formTour = document.getElementById('form-tour');
+
+        document.getElementById('imageFiles').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const uploadedImageUrls = [];
+            let uploadCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileName = Date.now() + '_' + file.name;
+
+                uploadToDiscloud(file, fileName, function(imageUrl, data) {
+                    uploadedImageUrls.push(imageUrl);
+                    uploadCount++;
+
+                    if (uploadCount === files.length) {
+                        document.getElementById('images').value = uploadedImageUrls.join(',');
+                    }
+                }, function(error) {
+                    alert('Error uploading image: ' + error);
+                });
+            }
+        });
+
+        document.getElementById('thumbnailImage').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileName = Date.now() + '_' + file.name;
+
+            uploadToDiscloud(file, fileName, function(imageUrl, data) {
+                console.log('Thumbnail uploaded:', imageUrl);
+                document.getElementById('thumbnail').value = imageUrl;
+            }, function(error) {
+                alert('Error uploading thumbnail: ' + error);
+            });
+        });
+
+        document.querySelectorAll('#editTour').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const tourId = this.getAttribute('data-tour-id');
+                getTour(tourId);
+                $('#addTour').modal('show');
+            });
+        });
+
+        document.querySelectorAll('#deleteTour').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const tourId = this.getAttribute('data-tour-id');
+                deleteTour(tourId);
+            });
+        });
+
+        function resetForm() {
+            title.value = '';
+            CKEDITOR.instances.description.setData('');
+            tourLocation.value = '';
+            duration_days.value = '';
+            price.value = '';
+            thumbnail.value = '';
+            images.value = '';
+            addTourModalLabel.innerText = 'Add New Tour';
+            formTour.action = '/admin/tours';
+        }
+
+        function getTour(id) {
+            fetch('/admin/tours/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    title.value = data.title;
+                    CKEDITOR.instances.description.setData(data.description);
+                    tourLocation.value = data.location;
+                    duration_days.value = data.duration_days;
+                    price.value = data.price;
+                    thumbnail.value = data.thumbnail;
+                    category.value = data.category.id;
+                    images.value = data.images;
+                    addTourModalLabel.innerText = 'Edit Tour - ' + data.title;
+                    formTour.action = '/admin/tours/' + id;
+                    // You can set other fields similarly
+                })
+                .catch(error => {
+                    console.error('Error fetching tour data:', error);
+                });
+        }
+
+        function deleteTour(id) {
+            if (confirm('Are you sure you want to delete this tour?')) {
+                fetch('/admin/tours/' + id + '/delete', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '[[${_csrf.token}]]'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete tour.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting tour:', error);
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>

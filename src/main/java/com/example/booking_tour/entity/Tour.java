@@ -53,7 +53,7 @@ public class Tour {
     @CreationTimestamp
     private LocalDateTime updated_at;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 }

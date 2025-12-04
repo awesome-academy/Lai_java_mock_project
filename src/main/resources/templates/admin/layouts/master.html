@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(titleFragment, content)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(titleFragment, content, scripts)">
 <head>
     <meta charset="UTF-8">
     <title th:replace="${titleFragment}">Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_parameter_name" th:content="${_csrf.parameterName}"/>
     <!-- BOOTSTRAP 3 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
@@ -35,6 +37,75 @@
 <!-- BOOTSTRAP JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+
+<script>
+    // Hàm upload file lên Discloud API
+    function uploadToDiscloud(file, fileName, onSuccess, onError) {
+        var xhr = new XMLHttpRequest();
+        
+        xhr.open('POST', 'https://discloud-zeta.vercel.app/api/v1/discloud?fileName=' + encodeURIComponent(fileName), true);
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    
+                    if (response.code === 200 && response.data && response.data.url) {
+                        var imageUrl = 'https://' + response.data.url;
+                        onSuccess(imageUrl, response.data);
+                    } else {
+                        onError('Upload failed: ' + (response.message || 'Unknown error'));
+                    }
+                } catch (e) {
+                    onError('Invalid response: ' + e.message);
+                }
+            } else {
+                onError('Upload failed with status: ' + xhr.status);
+            }
+        };
+        
+        xhr.onerror = function() {
+            onError('Network error');
+        };
+        
+        xhr.send(file);
+    }
+    
+    // Khởi tạo CKEditor với Discloud upload
+    function initializeCKEditor(textareaId) {
+        var editor = CKEDITOR.replace(textareaId, {
+            versionCheck: false,
+            extraPlugins: 'uploadimage',
+            uploadUrl: 'https://discloud-zeta.vercel.app/api/v1/discloud',
+            filebrowserUploadUrl: 'https://discloud-zeta.vercel.app/api/v1/discloud',
+            filebrowserUploadMethod: 'xhr'
+        });
+        
+        editor.on('fileUploadRequest', function(evt) {
+            var fileLoader = evt.data.fileLoader;
+            
+            uploadToDiscloud(
+                fileLoader.file,
+                fileLoader.fileName,
+                function(imageUrl, data) {
+                    fileLoader.url = imageUrl;
+                    fileLoader.responseData = {uploaded: 1, url: imageUrl};
+                    fileLoader.changeStatus('uploaded');
+                },
+                function(errorMessage) {
+                    fileLoader.message = errorMessage;
+                    fileLoader.changeStatus('error');
+                }
+            );
+            
+            evt.stop();
+        }, null, null, 4);
+    }
+</script>
+
+<!-- Page specific scripts -->
+<th:block th:replace="${scripts} ?: ~{}"></th:block>
 
 </body>
 </html>
