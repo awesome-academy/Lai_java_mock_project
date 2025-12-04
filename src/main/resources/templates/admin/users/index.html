@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="admin/layouts/master :: layout(~{::title}, ~{::section})">
+      th:replace="admin/layouts/master :: layout(~{::title}, ~{::section}, _)">
 <head>
     <title th:text="${title}">User Management</title>
 </head>
