@@ -60,9 +60,19 @@
                                 <label for="location">Location <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="location" name="location" required minlength="2">
                             </div>
-                            <div class="form-group">
-                                <label for="duration_days">Duration Days <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="duration_days" name="duration_days" required minlength="2">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="start_time">Start Time <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="end_time">End Time <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="price">Price <span class="text-danger">*</span></label>
@@ -70,12 +80,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="imageFiles">Images <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple>
+                                <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple accept="image/*">
                                 <input type="hidden" id="images" name="images">
                             </div>
                             <div class="form-group">
                                 <label for="thumbnailImage">Thumbnail <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="thumbnailImage" name="thumbnailImage">
+                                <input type="file" class="form-control" id="thumbnailImage" name="thumbnailImage" accept="image/*">
                                 <input type="hidden" id="thumbnail" name="thumbnail">
                             </div>
                         </div>
@@ -102,7 +112,8 @@
                         <th>Title</th>
                         <th>Category</th>
                         <th>Location</th>
-                        <th>Duration Days</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                         <th>Price</th>
                         <th>Actions</th>
                     </tr>
@@ -116,7 +127,8 @@
                         <td th:text="${tour.title}"></td>
                         <td th:text="${tour.category?.name ?: 'N/A'}"></td>
                         <td th:text="${tour.location}"></td>
-                        <td th:text="${tour.duration_days}"></td>
+                        <td th:text="${#temporals.format(tour.start_time, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(tour.end_time, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${tour.price}"></td>
                         <td>
                             <div class="dropdown">
@@ -151,7 +163,8 @@
         let title = document.getElementById('title');
         let description = document.getElementById('description');
         let tourLocation = document.getElementById('location');
-        let duration_days = document.getElementById('duration_days');
+        let startTime = document.getElementById('start_time');
+        let endTime = document.getElementById('end_time');
         let price = document.getElementById('price');
         let thumbnail = document.getElementById('thumbnail');
         let images = document.getElementById('images');
@@ -214,7 +227,8 @@
             title.value = '';
             CKEDITOR.instances.description.setData('');
             tourLocation.value = '';
-            duration_days.value = '';
+            startTime.value = '';
+            endTime.value = '';
             price.value = '';
             thumbnail.value = '';
             images.value = '';
@@ -229,7 +243,8 @@
                     title.value = data.title;
                     CKEDITOR.instances.description.setData(data.description);
                     tourLocation.value = data.location;
-                    duration_days.value = data.duration_days;
+                    startTime.value = data.start_time;
+                    endTime.value = data.end_time;
                     price.value = data.price;
                     thumbnail.value = data.thumbnail;
                     category.value = data.category.id;
@@ -245,15 +260,17 @@
 
         function deleteTour(id) {
             if (confirm('Are you sure you want to delete this tour?')) {
+                const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+                
                 fetch('/admin/tours/' + id + '/delete', {
-                    method: 'POST',
+                    method: 'DELETE',
                     headers: {
-                        'X-CSRF-TOKEN': '[[${_csrf.token}]]'
+                        'X-CSRF-TOKEN': csrfToken
                     }
                 })
                 .then(response => {
                     if (response.ok) {
-                        location.reload();
+                        window.location.reload();
                     } else {
                         alert('Failed to delete tour.');
                     }

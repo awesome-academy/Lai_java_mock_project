@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class TourCreateRequest {
     @NotNull(message = "Category is required")
-    private Long category_id;
+    private Integer category_id;
 
     @NotBlank(message = "Tour name is required")
     @Size(min = 2, max = 255, message = "Tour name must be between 2 and 255 characters")
@@ -20,8 +20,11 @@ public class TourCreateRequest {
     @NotBlank(message = "Location is required")
     private String location;
 
-    @NotNull(message = "Duration days is required")
-    private Integer duration_days;
+    @NotBlank(message = "Start time is required")
+    private String start_time;
+
+    @NotBlank(message = "End time is required")
+    private String end_time;
 
     @NotBlank(message = "Price is required")
     private String price;

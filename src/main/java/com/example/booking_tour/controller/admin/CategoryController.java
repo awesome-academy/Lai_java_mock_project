@@ -54,7 +54,7 @@ public class CategoryController {
     }
 
     @PostMapping("/update/{categoryId}")
-    public String update(@PathVariable("categoryId") Long categoryId,
+    public String update(@PathVariable Integer categoryId,
             @Valid @ModelAttribute CategoryCreateRequest request,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
@@ -71,7 +71,7 @@ public class CategoryController {
     }
 
     @PostMapping("/delete/{categoryId}")
-    public String delete(@PathVariable("categoryId") Long categoryId,
+    public String delete(@PathVariable Integer categoryId,
             RedirectAttributes redirectAttributes) {
         try {
             categoryService.deleteCategory(categoryId);

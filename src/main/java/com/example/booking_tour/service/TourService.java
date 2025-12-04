@@ -5,6 +5,8 @@ import com.example.booking_tour.repository.TourImageRepository;
 import com.example.booking_tour.entity.Tour;
 import com.example.booking_tour.entity.TourImage;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import com.example.booking_tour.dto.TourCreateRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,8 @@ public class TourService {
         tour.setTitle(request.getTitle());
         tour.setDescription(request.getDescription());
         tour.setLocation(request.getLocation());
-        tour.setDuration_days(request.getDuration_days());
+        tour.setStart_time(LocalDateTime.parse(request.getStart_time()));
+        tour.setEnd_time(LocalDateTime.parse(request.getEnd_time()));
         tour.setPrice(new BigDecimal(request.getPrice()));
         tour.setThumbnail(request.getThumbnail());
         tourRepository.save(tour);
@@ -58,7 +61,7 @@ public class TourService {
         return tour;
     }
 
-    public Tour updateTour(Long id, TourCreateRequest request) {
+    public Tour updateTour(Integer id, TourCreateRequest request) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found with id: " + id));
 
@@ -69,7 +72,8 @@ public class TourService {
         tour.setTitle(request.getTitle());
         tour.setDescription(request.getDescription());
         tour.setLocation(request.getLocation());
-        tour.setDuration_days(request.getDuration_days());
+        tour.setStart_time(LocalDateTime.parse(request.getStart_time()));
+        tour.setEnd_time(LocalDateTime.parse(request.getEnd_time()));
         tour.setPrice(new BigDecimal(request.getPrice()));
         tour.setThumbnail(request.getThumbnail());
         tourRepository.save(tour);
@@ -79,7 +83,7 @@ public class TourService {
         return tour;
     }
 
-    public Tour deleteTour(Long id) {
+    public Tour deleteTour(Integer id) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found with id: " + id));
         tourRepository.delete(tour);

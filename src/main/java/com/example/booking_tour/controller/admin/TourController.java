@@ -1,10 +1,9 @@
 package com.example.booking_tour.controller.admin;
 
-import java.util.Locale.Category;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,7 +68,7 @@ public class TourController {
     @GetMapping("/{tourId}")
     @ResponseBody
     @Transactional(readOnly = true)
-    public ResponseEntity<Tour> show(@PathVariable Long tourId) {
+    public ResponseEntity<Tour> show(@PathVariable Integer tourId) {
         Tour tour = tourRepository.findById(tourId)
             .orElseThrow(() -> new RuntimeException("Tour not found with id: " + tourId));
         
@@ -77,7 +76,7 @@ public class TourController {
     }
 
     @PostMapping("/{tourId}")
-    public String update(@PathVariable Long tourId, @Valid @ModelAttribute TourCreateRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Integer tourId, @Valid @ModelAttribute TourCreateRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new RuntimeException("Fill in all required fields"); 
@@ -90,13 +89,12 @@ public class TourController {
         return "redirect:/admin/tours";
     }
 
-    @PostMapping("/{tourId}/delete")
-    public ResponseEntity<Object> delete(@PathVariable Long tourId, RedirectAttributes redirectAttributes) {
+    @DeleteMapping("/{tourId}/delete")
+     public ResponseEntity<Object> delete(@PathVariable Integer tourId) {
         try {
             tourService.deleteTour(tourId);
-            redirectAttributes.addFlashAttribute("success", "Tour deleted successfully!");
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("Tour deleted successfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }
