@@ -1,0 +1,1 @@
+import{u as t,c as o,r as n,o as r}from"./index-BHUHMJVo.js";const p={__name:"Auth",setup(a){return t({title:"Login",meta:[{name:"description",content:"Đăng nhập"}]}),(c,s)=>{const e=n("router-view");return r(),o(e)}}};export{p as default};
