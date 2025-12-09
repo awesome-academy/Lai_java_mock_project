@@ -15,6 +15,10 @@
 
         <!-- Login Form -->
         <div class="bg-white rounded-lg shadow-xl p-8">
+             <!-- Error Message -->
+            <div v-if="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
+                {{ errorMessage }}
+            </div>
             <form id="login-form" class="space-y-6">
                 <!-- Email -->
                 <div>
@@ -22,6 +26,7 @@
                         Email
                     </label>
                     <input 
+                        v-model="username"
                         type="email" 
                         id="email" 
                         name="email"
@@ -38,6 +43,7 @@
                     </label>
                     <div class="relative">
                         <input 
+                            v-model="password"
                             type="password" 
                             id="password" 
                             name="password"
@@ -78,8 +84,9 @@
 
                 <!-- Submit Button -->
                 <button 
-                    type="submit"
+                    type="button"
                     class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                    @click="login()"
                 >
                     Đăng Nhập
                 </button>
@@ -132,6 +139,45 @@
     </div>
   </div>
 </template>
+
+<script setup>
+    import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
+    import axios from '@/plugins/axios';
+
+    const router = useRouter();
+    const username = ref('');
+    const password = ref('');
+    const errorMessage = ref('');
+    const isLoading = ref(false);
+
+    const login = async () => {
+        
+        errorMessage.value = '';
+        isLoading.value = true;
+
+        try {
+            const response = await axios.post('/api/auth/login', {
+                email: username.value,
+                password: password.value
+            });
+            console.log(response)
+            // Lưu token nếu có
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+            }
+
+            // Redirect sau khi login thành công
+            router.push('/');
+            
+        } catch (error) {
+            console.error('Login failed:', error);
+            errorMessage.value = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại!';
+        } finally {
+            isLoading.value = false;
+        }
+    };
+</script>
 
 <route lang="yaml">
 meta:

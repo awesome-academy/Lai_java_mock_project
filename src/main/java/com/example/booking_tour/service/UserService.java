@@ -3,14 +3,20 @@ package com.example.booking_tour.service;
 import com.example.booking_tour.dto.PasswordUpdateRequest;
 import com.example.booking_tour.dto.UserCreateRequest;
 import com.example.booking_tour.dto.UserUpdateRequest;
+import com.example.booking_tour.dto.users.RegisterRequest;
 import com.example.booking_tour.entity.User;
 import com.example.booking_tour.repository.UserRepository;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.booking_tour.exception.EmailAlreadyExistsException;
 import com.example.booking_tour.exception.UserNotFoundException;
 
 import java.util.Optional;
+import java.util.Collections;
 
 @Service
 public class UserService {
@@ -41,6 +47,22 @@ public class UserService {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid role or provider value");
         }
+        
+        return userRepository.save(user);
+    }
+
+    public User createUser(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email đã được sử dụng!");
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhone(request.getPhone());
+        user.setRole(User.Role.USER);
+        user.setProvider(User.Provider.LOCAL);
         
         return userRepository.save(user);
     }
@@ -79,5 +101,23 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User foundUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + email));
+        
+        // Tạo UserDetails từ User entity
+        return new org.springframework.security.core.userdetails.User(
+                foundUser.getEmail(),
+                foundUser.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + foundUser.getRole().name()))
+        );
+    }
+
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

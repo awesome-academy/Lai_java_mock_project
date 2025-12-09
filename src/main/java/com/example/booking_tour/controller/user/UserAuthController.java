@@ -1,29 +1,75 @@
 package com.example.booking_tour.controller.user;
 
-import java.net.URL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.example.booking_tour.service.UserService;
 
-@Controller
+import jakarta.validation.Valid;
+
+import com.example.booking_tour.config.JwtUtils;
+import com.example.booking_tour.dto.JwtResponse;
+import com.example.booking_tour.dto.users.LoginRequest;
+import com.example.booking_tour.dto.ApiResponse;
+import com.example.booking_tour.dto.users.RegisterRequest;
+import com.example.booking_tour.entity.User;
+
+@RestController
+@RequestMapping("/api/auth")
 public class UserAuthController {
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("title", "User Login");
-        return "user/login";
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+        try {
+            // Xác thực user
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
+            );
+
+            // Lấy UserDetails cho việc tạo token
+            UserDetails userDetails = userService.loadUserByUsername(req.getEmail());
+            
+            // Generate JWT token
+            String token = jwtUtils.generateToken(userDetails.getUsername());
+
+            return ResponseEntity.ok(new JwtResponse(token));
+            
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401)
+                    .body(new ApiResponse<>(false, "Email hoặc mật khẩu không đúng!", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(new ApiResponse<>(false, "Lỗi server: " + e.getMessage(), null));
+        }
     }
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("title", "Register");
-        return "user/register";
-    }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            
+            User user = userService.createUser(request);
+            
+            return ResponseEntity.ok(new ApiResponse<>(true, "Đăng ký thành công!", user));
 
-    @GetMapping("/test-static")
-    public String test() {
-        URL resource = getClass().getClassLoader().getResource("static/index.html");
-        return resource != null ? resource.toString() : "static not found";
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse<>(false, "Lỗi server: " + e.getMessage(), null));
+        }
     }
 }

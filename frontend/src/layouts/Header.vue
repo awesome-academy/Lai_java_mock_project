@@ -21,12 +21,12 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-4">
-                    <button class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
+                    <router-link to="/login" class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
                         Đăng nhập
-                    </button>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                    </router-link>
+                    <router-link to="/register" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
                         Đăng ký
-                    </button>
+                    </router-link>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -49,15 +49,11 @@
                     <a href="#testimonials" class="text-gray-700 hover:text-blue-600 transition">Đánh giá</a>
                     <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Liên hệ</a>
                     <div class="flex flex-col space-y-2 pt-4">
-                        <router-link to="/login">
-                            <button class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
-                                Đăng nhập
-                            </button>
+                        <router-link to="/login" class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
+                            Đăng nhập
                         </router-link>
-                        <router-link to="/register">
-                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-                                Đăng ký
-                            </button>
+                        <router-link to="/register" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                            Đăng ký
                         </router-link>
                     </div>
                 </div>
@@ -65,3 +61,35 @@
         </nav>
     </header>
 </template>
+
+<script setup>
+    import { onMounted } from 'vue';
+
+    const customJs = () => {
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking on a link
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+    };
+
+    onMounted(() => {
+        customJs();
+    });
+</script>

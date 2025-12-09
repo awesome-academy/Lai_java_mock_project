@@ -15,6 +15,10 @@
 
             <!-- Register Form -->
             <div class="bg-white rounded-lg shadow-xl p-8">
+                <!-- Error Message -->
+                <div v-if="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
+                    {{ errorMessage }}
+                </div>
                 <form id="register-form" class="space-y-5">
                     <!-- Full Name -->
                     <div>
@@ -22,12 +26,12 @@
                             Họ và tên
                         </label>
                         <input 
+                            v-model="name"
                             type="text" 
                             id="fullname" 
                             name="fullname"
                             required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Nguyễn Văn A"
                         />
                     </div>
 
@@ -37,12 +41,12 @@
                             Email
                         </label>
                         <input 
+                            v-model="email"
                             type="email" 
                             id="email" 
                             name="email"
                             required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="email@example.com"
                         />
                     </div>
 
@@ -52,12 +56,12 @@
                             Số điện thoại
                         </label>
                         <input 
+                            v-model="phone"
                             type="tel" 
                             id="phone" 
                             name="phone"
                             required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="0912345678"
                         />
                     </div>
 
@@ -68,13 +72,13 @@
                         </label>
                         <div class="relative">
                             <input 
+                                v-model="password"
                                 type="password" 
                                 id="password" 
                                 name="password"
                                 required
                                 minlength="6"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="••••••••"
                             />
                             <button 
                                 type="button"
@@ -97,12 +101,12 @@
                         </label>
                         <div class="relative">
                             <input 
+                                v-model="confirmPassword"
                                 type="password" 
                                 id="confirm-password" 
                                 name="confirm-password"
                                 required
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="••••••••"
                             />
                             <button 
                                 type="button"
@@ -136,8 +140,9 @@
 
                     <!-- Submit Button -->
                     <button 
-                        type="submit"
+                        type="button"
                         class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                        @click="register()"
                     >
                         Đăng Ký
                     </button>
@@ -190,6 +195,40 @@
         </div>
     </div>
 </template>
+
+<script setup>
+    import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
+    import axios from "@/plugins/axios";
+
+    const name = ref('');
+    const email = ref('');
+    const phone = ref('');
+    const password = ref('');
+    const confirmPassword = ref('');
+    const router = useRouter();
+    const errorMessage = ref('');
+
+    const register = async () => {
+        try {
+            if (password.value !== confirmPassword.value) {
+                errorMessage.value = 'Mật khẩu xác nhận không khớp';
+                return;
+            }
+
+            const response = await axios.post('/api/auth/register', {
+                name: name.value,
+                email: email.value,
+                phone: phone.value,
+                password: password.value,
+            });
+            router.push('/login');
+        } catch (error) {
+            console.error('Login failed:', error);
+            errorMessage.value = error.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại!';
+        }
+    };
+</script>
 
 <route lang="yaml">
 meta:
