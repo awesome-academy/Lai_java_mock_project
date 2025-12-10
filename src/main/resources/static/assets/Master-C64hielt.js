@@ -1,0 +1,1 @@
+import r from"./Header-F-w18pdR.js";import t from"./Footer-D_sfsZ9I.js";import{a,o as n,b as e,r as s}from"./index-CllQ7bUq.js";const u={__name:"Master",setup(_){return(c,m)=>{const o=s("router-view");return n(),a("div",null,[e(r),e(o),e(t)])}}};export{u as default};
