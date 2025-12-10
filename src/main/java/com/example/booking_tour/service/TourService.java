@@ -20,15 +20,21 @@ public class TourService {
     private final TourImageRepository tourImageRepository;
     private final CategoryRepository categoryRepository;
 
-    public TourService(TourRepository tourRepository, TourImageRepository tourImageRepository, CategoryRepository categoryRepository) {
+    public TourService(TourRepository tourRepository, TourImageRepository tourImageRepository,
+            CategoryRepository categoryRepository) {
         this.tourRepository = tourRepository;
         this.tourImageRepository = tourImageRepository;
         this.categoryRepository = categoryRepository;
     }
 
+    public List<Tour> findAll() {
+        return tourRepository.findAll();
+    }
+
     public Tour createTour(TourCreateRequest request) {
         Category category = categoryRepository.findById(request.getCategory_id())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + request.getCategory_id()));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Category not found with id: " + request.getCategory_id()));
 
         Tour tour = new Tour();
         tour.setCategory(category);
@@ -44,7 +50,7 @@ public class TourService {
         if (request.getImages() != null && !request.getImages().trim().isEmpty()) {
             String[] imageUrls = request.getImages().split(",");
             List<TourImage> tourImages = new ArrayList<>();
-            
+
             for (String imageUrl : imageUrls) {
                 String trimmedUrl = imageUrl.trim();
                 if (!trimmedUrl.isEmpty()) {
@@ -54,7 +60,7 @@ public class TourService {
                     tourImages.add(tourImage);
                 }
             }
-            
+
             tourImageRepository.saveAll(tourImages);
         }
 
@@ -66,7 +72,8 @@ public class TourService {
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found with id: " + id));
 
         Category category = categoryRepository.findById(request.getCategory_id())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + request.getCategory_id()));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Category not found with id: " + request.getCategory_id()));
 
         tour.setCategory(category);
         tour.setTitle(request.getTitle());
@@ -88,5 +95,10 @@ public class TourService {
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found with id: " + id));
         tourRepository.delete(tour);
         return tour;
+    }
+
+    public Tour findById(Integer id) {
+        return tourRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tour not found with id: " + id));
     }
 }

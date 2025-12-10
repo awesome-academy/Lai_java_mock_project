@@ -509,7 +509,19 @@
 </template>
 
 <script setup>
-    import { onMounted } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import axios from '@/plugins/axios';
+
+    const tours = ref([]);
+
+    const getTours = async () => {
+        try {
+            const response = await axios.get('/api/tours');
+            tours.value = response.data.data;
+        } catch (error) {
+            console.error('Error fetching tours:', error);
+        }
+    };
 
     const customJs = () => {
         // Search Form Handler
@@ -549,8 +561,9 @@
         });
     };
 
-    onMounted(() => {
+    onMounted(async () => {
         customJs();
+        await getTours()
     });
 </script>
 

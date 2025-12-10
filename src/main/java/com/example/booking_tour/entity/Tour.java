@@ -25,7 +25,7 @@ public class Tour {
     @jakarta.validation.constraints.Size(max = 255, message = "Tối đa 255 ký tự")
     private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     @jakarta.validation.constraints.NotBlank(message = "Mô tả tour không được để trống")
     private String description;
 

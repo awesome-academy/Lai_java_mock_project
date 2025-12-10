@@ -20,12 +20,20 @@
                     <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Liên hệ</a>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-4">
+                <div v-if="!isLogin" class="hidden md:flex items-center space-x-4">
                     <router-link to="/login" class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
                         Đăng nhập
                     </router-link>
                     <router-link to="/register" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
                         Đăng ký
+                    </router-link>
+                </div>
+                <div v-else class="hidden md:flex items-center space-x-4">
+                    <router-link to="/profile" class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
+                        Trang cá nhân
+                    </router-link>
+                    <router-link to="/logout" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                        Đăng xuất
                     </router-link>
                 </div>
 
@@ -63,7 +71,10 @@
 </template>
 
 <script setup>
-    import { onMounted } from 'vue';
+    import { onMounted, ref } from 'vue';
+
+    const isLogin = ref(false);
+    const user = ref(null);
 
     const customJs = () => {
         // Mobile Menu Toggle
@@ -87,6 +98,9 @@
                 closeIcon.classList.add('hidden');
             });
         });
+
+        isLogin.value = localStorage.getItem('isLogin');
+        user.value = localStorage.getItem('user');
     };
 
     onMounted(() => {

@@ -20,15 +20,15 @@ import java.util.Collections;
 
 @Service
 public class UserService {
-    
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    
+
     public User createUser(UserCreateRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("Email already exists");
@@ -47,7 +47,7 @@ public class UserService {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid role or provider value");
         }
-        
+
         return userRepository.save(user);
     }
 
@@ -63,10 +63,10 @@ public class UserService {
         user.setPhone(request.getPhone());
         user.setRole(User.Role.USER);
         user.setProvider(User.Provider.LOCAL);
-        
+
         return userRepository.save(user);
     }
-    
+
     public User updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -77,7 +77,7 @@ public class UserService {
                 throw new EmailAlreadyExistsException("Email already exists");
             }
         }
-        
+
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
@@ -86,36 +86,38 @@ public class UserService {
         if (request.getProvider() != null) {
             user.setProvider(User.Provider.valueOf(request.getProvider()));
         }
-        
+
         return userRepository.save(user);
     }
-    
+
     public void updatePassword(Long id, PasswordUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        
+
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
     }
-    
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User foundUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + email));
-        
+
         // Tạo UserDetails từ User entity
         return new org.springframework.security.core.userdetails.User(
                 foundUser.getEmail(),
                 foundUser.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + foundUser.getRole().name()))
-        );
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + foundUser.getRole().name())));
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + email));
+    }
 
     public void save(User user) {
         userRepository.save(user);
