@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,13 +26,29 @@ public class Booking {
     private String booking_date;
 
     @Column(nullable = false)
+    private String full_name;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
     private Integer number_of_people;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(nullable = false)
     private BigDecimal total_price;
+
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String note;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -40,11 +58,17 @@ public class Booking {
     @CreationTimestamp
     private LocalDateTime updated_at;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
+
+    public enum Status {
+        PENDING, CONFIRMED, CANCELLED
+    }
 }

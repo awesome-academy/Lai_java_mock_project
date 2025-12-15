@@ -82,10 +82,10 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Destination Card 1 -->
-                    <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                    <div v-for="location in topLocations" :key="location.id" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
                         <div class="aspect-[4/5] overflow-hidden">
                             <img 
-                                src="https://images.unsplash.com/photo-1431274172761-fca41d930114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGVpZmZlbCUyMHRvd2VyfGVufDF8fHx8MTc2NDc2MDQxOHww&ixlib=rb-4.1.0&q=80&w=1080"
+                                :src=   "location.thumbnail"
                                 alt="Paris, Pháp"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             />
@@ -96,83 +96,11 @@
                                 <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 </svg>
-                                <span class="font-semibold">Paris, Pháp</span>
+                                <span class="font-semibold">{{ location.location }}</span>
                             </div>
                             <div class="flex justify-between items-center text-sm">
-                                <span class="text-white/80">15 tours</span>
-                                <span class="text-white/90 font-medium">Từ 25.000.000₫</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Destination Card 2 -->
-                    <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                        <div class="aspect-[4/5] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1704253411612-e4deb715dcd8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYWxpJTIwdGVtcGxlfGVufDF8fHx8MTc2NDcwODcxMXww&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Bali, Indonesia"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                        </div>
-                        <div class="absolute inset-0 destination-gradient"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span class="font-semibold">Bali, Indonesia</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-white/80">12 tours</span>
-                                <span class="text-white/90 font-medium">Từ 15.000.000₫</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Destination Card 3 -->
-                    <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                        <div class="aspect-[4/5] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW50b3JpbmklMjBncmVlY2V8ZW58MXx8fHwxNzY0NzU0NDcwfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Santorini, Hy Lạp"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                        </div>
-                        <div class="absolute inset-0 destination-gradient"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span class="font-semibold">Santorini, Hy Lạp</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-white/80">10 tours</span>
-                                <span class="text-white/90 font-medium">Từ 30.000.000₫</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Destination Card 4 -->
-                    <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                        <div class="aspect-[4/5] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1640871426525-a19540c45a39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0b2t5byUyMGphcGFuJTIwY2l0eXxlbnwxfHx8fDE3NjQ3NDA2NDF8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Tokyo, Nhật Bản"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                        </div>
-                        <div class="absolute inset-0 destination-gradient"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span class="font-semibold">Tokyo, Nhật Bản</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-white/80">18 tours</span>
-                                <span class="text-white/90 font-medium">Từ 28.000.000₫</span>
+                                <span class="text-white/80">{{ location.tourCount }} tours</span>
+                                <span class="text-white/90 font-medium">Từ {{ new Intl.NumberFormat('vi-VN').format(location.minPrice) }}₫</span>
                             </div>
                         </div>
                     </div>
@@ -189,11 +117,11 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Tour Card 1 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
+                    <!-- Tour Card -->
+                    <div v-for="tour in tours" :key="tour.id" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
                         <div class="relative aspect-[4/3] overflow-hidden">
                             <img 
-                                src="https://images.unsplash.com/photo-1558117338-aa433feb1c62?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwcmVzb3J0fGVufDF8fHx8MTc2NDgwMDk0NXww&ixlib=rb-4.1.0&q=80&w=1080"
+                                :src="tour.thumbnail"
                                 alt="Du lịch biển Maldives"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             />
@@ -201,18 +129,20 @@
                                 Nổi bật
                             </div>
                             <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-gray-900 text-sm font-medium">
-                                5 ngày 4 đêm
+                                {{ calcDays(tour.start_time, tour.end_time) }} Ngày
                             </div>
                         </div>
                         
                         <div class="p-4">
-                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900">Du lịch biển Maldives 5N4Đ</h3>
+                            <router-link :to="`/tours/${tour.id}`">
+                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900">{{ tour.title }}</h3>
+                            </router-link>
                             
                             <div class="flex items-center text-gray-600 mb-3 text-sm">
                                 <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 </svg>
-                                <span>Maldives</span>
+                                <span>{{ tour.location }}</span>
                             </div>
                             
                             <div class="flex items-center justify-between mb-3">
@@ -228,149 +158,11 @@
                             <div class="flex items-center justify-between pt-3 border-t border-gray-200">
                                 <div>
                                     <span class="text-gray-500 text-sm">Từ</span>
-                                    <div class="text-blue-600 font-bold">35.000.000₫</div>
+                                    <div class="text-blue-600 font-bold">{{ new Number(tour.price).toLocaleString() }}Đ</div>
                                 </div>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+                                <router-link :to="`/tours/${tour.id}`" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
                                     Đặt ngay
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tour Card 2 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1431274172761-fca41d930114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMGVpZmZlbCUyMHRvd2VyfGVufDF8fHx8MTc2NDc2MDQxOHww&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Khám phá Châu Âu"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                            <div class="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                Nổi bật
-                            </div>
-                            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-gray-900 text-sm font-medium">
-                                7 ngày 6 đêm
-                            </div>
-                        </div>
-                        
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900">Khám phá Châu Âu 7N6Đ</h3>
-                            
-                            <div class="flex items-center text-gray-600 mb-3 text-sm">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span>Pháp - Đức - Thụy Sĩ</span>
-                            </div>
-                            
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center text-sm">
-                                    <svg class="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                    <span class="font-semibold text-gray-900">4.8</span>
-                                    <span class="text-gray-500 ml-1">(95 đánh giá)</span>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
-                                <div>
-                                    <span class="text-gray-500 text-sm">Từ</span>
-                                    <div class="text-blue-600 font-bold">45.000.000₫</div>
-                                </div>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
-                                    Đặt ngay
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tour Card 3 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1704253411612-e4deb715dcd8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYWxpJTIwdGVtcGxlfGVufDF8fHx8MTc2NDcwODcxMXww&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Phiêu lưu Bali"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-gray-900 text-sm font-medium">
-                                6 ngày 5 đêm
-                            </div>
-                        </div>
-                        
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900">Phiêu lưu Bali 6N5Đ</h3>
-                            
-                            <div class="flex items-center text-gray-600 mb-3 text-sm">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span>Bali, Indonesia</span>
-                            </div>
-                            
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center text-sm">
-                                    <svg class="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                    <span class="font-semibold text-gray-900">4.7</span>
-                                    <span class="text-gray-500 ml-1">(156 đánh giá)</span>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
-                                <div>
-                                    <span class="text-gray-500 text-sm">Từ</span>
-                                    <div class="text-blue-600 font-bold">18.000.000₫</div>
-                                </div>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
-                                    Đặt ngay
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tour Card 4 -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            <img 
-                                src="https://images.unsplash.com/photo-1609373066983-cee8662ea93f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMGhpa2luZyUyMGFkdmVudHVyZXxlbnwxfHx8fDE3NjQ4MDExNDR8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                                alt="Chinh phục núi Alps"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-gray-900 text-sm font-medium">
-                                8 ngày 7 đêm
-                            </div>
-                        </div>
-                        
-                        <div class="p-4">
-                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900">Chinh phục núi Alps 8N7Đ</h3>
-                            
-                            <div class="flex items-center text-gray-600 mb-3 text-sm">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                </svg>
-                                <span>Thụy Sĩ</span>
-                            </div>
-                            
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center text-sm">
-                                    <svg class="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                    <span class="font-semibold text-gray-900">4.9</span>
-                                    <span class="text-gray-500 ml-1">(73 đánh giá)</span>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between pt-3 border-t border-gray-200">
-                                <div>
-                                    <span class="text-gray-500 text-sm">Từ</span>
-                                    <div class="text-blue-600 font-bold">52.000.000₫</div>
-                                </div>
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
-                                    Đặt ngay
-                                </button>
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -513,15 +305,51 @@
     import axios from '@/plugins/axios';
 
     const tours = ref([]);
+    const topLocations = ref([]);
 
     const getTours = async () => {
         try {
-            const response = await axios.get('/api/tours');
-            tours.value = response.data.data;
+            const params = {
+                page: 0,
+                size: 4,
+                sort: 'id,desc'
+            }
+            const response = await axios.get('/api/tours', { params });
+            tours.value = response.data.data.data;
+            console.log('Pagination info:', {
+                currentPage: response.data.data.currentPage,
+                totalPages: response.data.data.totalPages,
+                totalItems: response.data.data.totalItems
+            });
         } catch (error) {
             console.error('Error fetching tours:', error);
         }
     };
+
+    const getTopLocations = async () => {
+        try {
+            const params = {
+                page: 0,
+                size: 4,
+                sort: 'id,desc'
+            }
+            const response = await axios.get('/api/tours/top-locations', { params });
+            topLocations.value = response.data.data.data;
+            console.log('Pagination info:', {
+                currentPage: response.data.data.currentPage,
+                totalPages: response.data.data.totalPages,
+                totalItems: response.data.data.totalItems
+            });
+        } catch (error) {
+            console.error('Error fetching top locations:', error);
+        }
+    };
+
+    const calcDays = (start, end) => {
+        const s = new Date(start);
+        const e = new Date(end);
+        return Math.ceil((e - s) / (1000 * 60 * 60 * 24));
+    }  
 
     const customJs = () => {
         // Search Form Handler
@@ -558,12 +386,13 @@
                     alert('Cảm ơn bạn đã quan tâm! Chức năng đặt tour sẽ sớm được cập nhật.');
                 });
             }
-        });
+        }); 
     };
 
     onMounted(async () => {
         customJs();
         await getTours()
+        await getTopLocations()
     });
 </script>
 

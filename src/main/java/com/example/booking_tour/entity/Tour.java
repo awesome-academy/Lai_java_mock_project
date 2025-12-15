@@ -2,6 +2,7 @@ package com.example.booking_tour.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -42,6 +43,10 @@ public class Tour {
     private LocalDateTime end_time;
 
     @Column(nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "Số ngày không được để trống")
+    private Integer duration_days;
+
+    @Column(nullable = false)
     @jakarta.validation.constraints.NotNull(message = "Giá không được để trống")
     private BigDecimal price;
 
@@ -60,4 +65,7 @@ public class Tour {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TourImage> images;
 }
