@@ -57,7 +57,7 @@ public class TourService {
 
         // Calculate duration in days
         long daysBetween = ChronoUnit.DAYS.between(startTime, endTime);
-        tour.setDuration_days((int) daysBetween);
+        tour.setDuration_days((int) daysBetween + 1);
 
         tour.setPrice(new BigDecimal(request.getPrice()));
         tour.setThumbnail(request.getThumbnail());
