@@ -34,8 +34,12 @@ public class Tour {
     private String location;
 
     @Column(nullable = false)
-    @jakarta.validation.constraints.NotNull(message = "Số ngày không được để trống")
-    private Integer duration_days;
+    @jakarta.validation.constraints.NotNull(message = "Ngày bắt đầu không được để trống")
+    private LocalDateTime start_time;
+
+    @Column(nullable = false)
+    @jakarta.validation.constraints.NotNull(message = "Ngày kết thúc không được để trống")
+    private LocalDateTime end_time;
 
     @Column(nullable = false)
     @jakarta.validation.constraints.NotNull(message = "Giá không được để trống")
