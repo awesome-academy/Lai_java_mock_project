@@ -125,7 +125,12 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                                                 .requestMatchers("/api/auth/login",
                                                                 "/api/auth/register",
-                                                                "/api/auth/me")
+                                                                "/api/auth/me",
+                                                                "/api/tours",
+                                                                "/api/tours/{id}",
+                                                                "/api/tours/top-locations",
+                                                                "/api/upload/**",
+                                                                "/uploads/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

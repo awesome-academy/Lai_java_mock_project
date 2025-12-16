@@ -23,15 +23,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
-@Controller
+@Controller("adminTourController")
 @RequestMapping("/admin/tours")
 public class TourController {
     private final TourRepository tourRepository;
     private final TourService tourService;
     private final CategoryRepository categoryRepository;
 
-    public TourController(TourRepository tourRepository, TourService tourService, CategoryRepository categoryRepository) {
+    public TourController(TourRepository tourRepository, TourService tourService,
+            CategoryRepository categoryRepository) {
         this.tourRepository = tourRepository;
         this.tourService = tourService;
         this.categoryRepository = categoryRepository;
@@ -48,12 +48,13 @@ public class TourController {
     }
 
     @PostMapping("")
-    public String store(@Valid @ModelAttribute TourCreateRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String store(@Valid @ModelAttribute TourCreateRequest request, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new RuntimeException("Fill in all required fields");
             }
-            
+
             tourService.createTour(request);
 
             // Call service to create tour (service not implemented in this snippet)
@@ -70,16 +71,17 @@ public class TourController {
     @Transactional(readOnly = true)
     public ResponseEntity<Tour> show(@PathVariable Integer tourId) {
         Tour tour = tourRepository.findById(tourId)
-            .orElseThrow(() -> new RuntimeException("Tour not found with id: " + tourId));
-        
+                .orElseThrow(() -> new RuntimeException("Tour not found with id: " + tourId));
+
         return ResponseEntity.ok(tour);
     }
 
     @PostMapping("/{tourId}")
-    public String update(@PathVariable Integer tourId, @Valid @ModelAttribute TourCreateRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Integer tourId, @Valid @ModelAttribute TourCreateRequest request,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         try {
             if (bindingResult.hasErrors()) {
-                throw new RuntimeException("Fill in all required fields"); 
+                throw new RuntimeException("Fill in all required fields");
             }
             tourService.updateTour(tourId, request);
             redirectAttributes.addFlashAttribute("success", "Tour updated successfully!");
@@ -90,7 +92,7 @@ public class TourController {
     }
 
     @DeleteMapping("/{tourId}/delete")
-     public ResponseEntity<Object> delete(@PathVariable Integer tourId) {
+    public ResponseEntity<Object> delete(@PathVariable Integer tourId) {
         try {
             tourService.deleteTour(tourId);
 

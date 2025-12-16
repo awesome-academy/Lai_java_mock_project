@@ -3,21 +3,21 @@
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
+                <router-link to="/" class="flex items-center">
                     <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span class="ml-2 text-xl font-bold text-blue-600">TravelVN</span>
-                </div>
+                    <span class="ml-2 text-xl font-bold text-blue-600">SunBooking</span>
+                </router-link>
                 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Trang chủ</a>
-                    <a href="#destinations" class="text-gray-700 hover:text-blue-600 transition">Điểm đến</a>
-                    <a href="#tours" class="text-gray-700 hover:text-blue-600 transition">Tour</a>
-                    <a href="#testimonials" class="text-gray-700 hover:text-blue-600 transition">Đánh giá</a>
-                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Liên hệ</a>
+                    <router-link to="/" class="text-gray-700 hover:text-blue-600 transition">Trang chủ</router-link>
+                    <!-- <router-link to="/destinations" class="text-gray-700 hover:text-blue-600 transition">Điểm đến</router-link> -->
+                    <router-link to="/tours" class="text-gray-700 hover:text-blue-600 transition">Tour</router-link>
+                    <!-- <router-link to="/testimonials" class="text-gray-700 hover:text-blue-600 transition">Đánh giá</router-link> -->
+                    <!-- <router-link to="/contact" class="text-gray-700 hover:text-blue-600 transition">Liên hệ</router-link> -->
                 </div>
 
                 <div v-if="!isLogin" class="hidden md:flex items-center space-x-4">
@@ -83,6 +83,9 @@
         const menuIcon = document.getElementById('menu-icon');
         const closeIcon = document.getElementById('close-icon');
 
+        if (!mobileMenuBtn || !mobileMenu || !menuIcon || !closeIcon) {
+            return;
+        }
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
             menuIcon.classList.toggle('hidden');

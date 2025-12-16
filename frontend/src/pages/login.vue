@@ -10,7 +10,7 @@
                 </svg>
             </div>
             <h2 class="text-3xl font-bold text-gray-900">Đăng Nhập</h2>
-            <p class="text-gray-600 mt-2">Chào mừng trở lại với TravelVN</p>
+            <p class="text-gray-600 mt-2">Chào mừng trở lại với SunBooking</p>
         </div>
 
         <!-- Login Form -->
@@ -161,15 +161,12 @@
                 email: username.value,
                 password: password.value
             });
-            console.log(response)
-            // Lưu token nếu có
+
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
             }
 
-            // Redirect sau khi login thành công
             router.push('/');
-            
         } catch (error) {
             console.error('Login failed:', error);
             errorMessage.value = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại!';

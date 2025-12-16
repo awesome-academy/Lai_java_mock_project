@@ -18,8 +18,13 @@
         try {
             const response = await axios.get('/api/auth/me');
             user.value = response.data.data;
-            localStorage.setItem('user', JSON.stringify(user.value));
-            localStorage.setItem('isLogin', true);
+            if (user.value != null) {
+                localStorage.setItem('user', JSON.stringify(user.value));
+                localStorage.setItem('isLogin', true);
+            } else {
+                localStorage.removeItem('user');
+                localStorage.removeItem('isLogin');
+            }
         } catch (error) {
             localStorage.removeItem('user');
             localStorage.removeItem('isLogin');
