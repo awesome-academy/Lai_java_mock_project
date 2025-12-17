@@ -1,4 +1,5 @@
 <template>
+    <div>
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -171,6 +172,7 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script setup>
@@ -245,6 +247,7 @@
                 console.log(response);
                 tourCode.value = response.data.data.id;
                 document.getElementById('successModal').classList.remove('hidden');
+                localStorage.removeItem('booking');
             })
             .catch(error => {
                 console.error(error);
@@ -259,7 +262,7 @@
             formData.value.booking_date = bookingData.startDate;
             formData.value.number_of_people = bookingData.guests;
         }
-    })
+    });
 </script>
 
 <route lang="yaml">

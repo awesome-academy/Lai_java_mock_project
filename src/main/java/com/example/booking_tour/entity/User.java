@@ -35,6 +35,12 @@ public class User {
     @Column(nullable = true)
     private String avatar;
 
+    @Column(nullable = true, columnDefinition = "varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    private String birthday;
+
+    @Column(nullable = true, columnDefinition = "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    private String address;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;

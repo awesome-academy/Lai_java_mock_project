@@ -24,6 +24,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                             <input
+                                v-model="keywords"
                                 type="text"
                                 id="destination"
                                 placeholder="Điểm đến"
@@ -36,6 +37,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             <input
+                                v-model="startDate"
                                 type="date"
                                 id="date"
                                 class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
@@ -47,6 +49,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                             <select
+                                v-model="guests"
                                 id="guests"
                                 class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none text-gray-900"
                             >
@@ -58,8 +61,9 @@
                             </select>
                         </div>
                         
-                        <button 
-                            type="submit"
+                        <button
+                            @click="searchTour()"
+                            type="button"
                             class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center justify-center space-x-2 font-medium"
                         >
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,10 +306,15 @@
 
 <script setup>
     import { onMounted, ref } from 'vue';
+    import { useRouter } from 'vue-router';
     import axios from '@/plugins/axios';
 
     const tours = ref([]);
     const topLocations = ref([]);
+    const keywords = ref('');
+    const startDate = ref('');
+    const guests = ref(1);
+    const router = useRouter();
 
     const getTours = async () => {
         try {
@@ -325,6 +334,16 @@
             console.error('Error fetching tours:', error);
         }
     };
+
+    const searchTour = () => {
+        const params = {
+            keywords: keywords.value,
+            startDate: startDate.value,
+            guests: guests.value
+        }
+
+        router.push({ name: 'tours', query: params });
+    }
 
     const getTopLocations = async () => {
         try {

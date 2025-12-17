@@ -23,6 +23,7 @@ import com.example.booking_tour.dto.users.LoginRequest;
 import com.example.booking_tour.dto.ApiResponse;
 import com.example.booking_tour.dto.users.RegisterRequest;
 import com.example.booking_tour.entity.User;
+import com.example.booking_tour.dto.users.UpdateProfileRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -84,4 +85,16 @@ public class UserAuthController {
         User user = userService.findByEmail(userDetails.getUsername());
         return ResponseEntity.ok(new ApiResponse<>(true, "Lấy thông tin user thành công!", user));
     }
+
+    @PostMapping("update-profile")
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid UpdateProfileRequest request) {
+        try {
+            User updatedUser = userService.updateUserByUser(request);
+
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cập nhật thông tin thành công!", updatedUser));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse<>(false, "Lỗi server: " + e.getMessage(), null));
+        }
+    }
+    
 }

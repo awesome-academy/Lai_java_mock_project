@@ -1,7 +1,5 @@
 package com.example.booking_tour.seeder;
 
-import java.util.Arrays;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,8 +14,7 @@ public class UserSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     public UserSeeder(UserRepository userRepository,
-        PasswordEncoder passwordEncoder
-    ){
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
