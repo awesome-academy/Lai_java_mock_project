@@ -67,7 +67,10 @@ public class SecurityConfig {
                                                 "/fonts/**",
                                                 "/favicon.ico",
                                                 "/assets/**",
-                                                "/index.html")
+                                                "/index.html",
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui/**",
+                                                "/swagger-ui.html")
                                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                                 .requestCache(cache -> cache.disable())
                                 .securityContext(context -> context.disable())

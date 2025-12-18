@@ -14,13 +14,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.booking_tour.dto.ApiResponse;
 import com.example.booking_tour.dto.LocationStatsDTO;
 import com.example.booking_tour.entity.Tour;
 import com.example.booking_tour.service.TourService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController("userTourController")
 @RequestMapping("/api/tours")
+@Tag(name = "Tours", description = "Các API dành cho khách hàng xem thông tin tour")
 public class TourController {
     private final TourService tourService;
 
@@ -28,13 +36,17 @@ public class TourController {
         this.tourService = tourService;
     }
 
+    @Operation(summary = "Lấy danh sách tour", description = "Hỗ trợ phân trang, tìm kiếm theo từ khóa và ngày khởi hành")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
+    })
     @GetMapping
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllTours(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keywords,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(defaultValue = "id,desc") String[] sort) {
+    public ResponseEntity<com.example.booking_tour.dto.ApiResponse<Map<String, Object>>> getAllTours(
+            @Parameter(description = "Số trang (bắt đầu từ 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Số bản ghi mỗi trang") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Từ khóa tìm kiếm (tên tour, mô tả...)") @RequestParam(required = false) String keywords,
+            @Parameter(description = "Ngày khởi hành (YYYY-MM-DD)") @RequestParam(required = false) String startDate,
+            @Parameter(description = "Sắp xếp theo (field,direction)") @RequestParam(defaultValue = "id,desc") String[] sort) {
         try {
             // Parse sort parameters
             String sortField = sort[0];
@@ -60,29 +72,41 @@ public class TourController {
             response.put("pageSize", tourPage.getSize());
 
             return ResponseEntity.ok(
-                    new ApiResponse<>(true, "Lấy thông tin tour thành công!", response));
+                    new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy thông tin tour thành công!", response));
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse<>(false, "Lỗi khi lấy danh sách tour", errorResponse));
+                    .body(new com.example.booking_tour.dto.ApiResponse<>(false, "Lỗi khi lấy danh sách tour",
+                            errorResponse));
         }
     }
 
+    @Operation(summary = "Lấy chi tiết tour", description = "Lấy thông tin chi tiết của một tour theo ID")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Tìm thấy tour", content = @Content(schema = @Schema(implementation = Tour.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Không tìm thấy tour")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Tour>> getTourById(@PathVariable Integer id) {
+    public ResponseEntity<com.example.booking_tour.dto.ApiResponse<Tour>> getTourById(@PathVariable Integer id) {
         Tour tour = tourService.findById(id);
         if (tour == null) {
-            return ResponseEntity.ok(new ApiResponse<>(false, "Tour not found with id: " + id, null));
+            return ResponseEntity
+                    .ok(new com.example.booking_tour.dto.ApiResponse<>(false, "Tour not found with id: " + id, null));
         }
 
-        return ResponseEntity.ok(new ApiResponse<>(true, "Lấy thông tin tour thành công!", tour));
+        return ResponseEntity
+                .ok(new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy thông tin tour thành công!", tour));
     }
 
+    @Operation(summary = "Lấy danh sách các địa điểm hàng đầu", description = "Thống kê các địa điểm có nhiều tour nhất")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
+    })
     @GetMapping("/top-locations")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getTopLocations(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size) {
+    public ResponseEntity<com.example.booking_tour.dto.ApiResponse<Map<String, Object>>> getTopLocations(
+            @Parameter(description = "Số trang") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Số bản ghi mỗi trang") @RequestParam(defaultValue = "4") int size) {
 
         try {
             Pageable pageable = PageRequest.of(page, size);
@@ -96,12 +120,14 @@ public class TourController {
             response.put("pageSize", locationPage.getSize());
 
             return ResponseEntity.ok(
-                    new ApiResponse<>(true, "Lấy thông tin địa điểm thành công!", response));
+                    new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy thông tin địa điểm thành công!",
+                            response));
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse<>(false, "Lỗi khi lấy danh sách địa điểm", errorResponse));
+                    .body(new com.example.booking_tour.dto.ApiResponse<>(false, "Lỗi khi lấy danh sách địa điểm",
+                            errorResponse));
         }
     }
 }
