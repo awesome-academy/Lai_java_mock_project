@@ -163,7 +163,7 @@
 
                     <!-- Tours Grid -->
                     <div id="toursContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div v-for="tour in tours" :key="tour.id" class="tour-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" @click="window.location.href=`tour-detail.html?id=${tour.id}`">
+                        <div v-for="tour in tours" :key="tour.id" class="tour-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" @click="router.push(`/tours/${tour.id}`)">
                             <img :src="tour.thumbnail" :alt="tour.title" class="w-full h-48 object-cover">
                             <div class="p-4">
                                 <div class="flex items-center gap-2 mb-2">
@@ -174,7 +174,7 @@
                                 <p class="text-gray-600 text-sm mb-3">{{ truncate(stripHtml(tour.description), 150) }}</p>
                                 <div class="flex items-center mb-3">
                                     <span class="text-yellow-400">${stars}</span>
-                                    <span class="text-gray-600 text-sm ml-2">${tour.rating} (${tour.reviews} đánh giá)</span>
+                                    <span class="text-gray-600 text-sm ml-2">5 (294 đánh giá)</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <div>
@@ -212,10 +212,11 @@
 <script setup>
     import { onMounted, ref, computed } from 'vue';
     import axios from "@/plugins/axios";
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const tours = ref([]);
     const route = useRoute();
+    const router = useRouter();
     const keywords = ref(route.query.keywords || '');
     const startDate = ref(route.query.startDate || '');
     const guests = ref(route.query.guests || 1);

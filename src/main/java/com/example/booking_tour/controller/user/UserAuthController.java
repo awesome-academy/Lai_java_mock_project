@@ -87,9 +87,13 @@ public class UserAuthController {
     }
 
     @PostMapping("update-profile")
-    public ResponseEntity<?> updateProfile(@RequestBody @Valid UpdateProfileRequest request) {
+    public ResponseEntity<?> updateProfile(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid UpdateProfileRequest request) {
         try {
-            User updatedUser = userService.updateUserByUser(request);
+            String currentUserEmail = userDetails.getUsername();
+            
+            User updatedUser = userService.updateUserByUser(currentUserEmail, request);
 
             return ResponseEntity.ok(new ApiResponse<>(true, "Cập nhật thông tin thành công!", updatedUser));
         } catch (Exception e) {

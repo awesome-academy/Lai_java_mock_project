@@ -123,9 +123,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User updateUserByUser(UpdateProfileRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + request.getEmail()));
+    public User updateUserByUser(String currentUserEmail, UpdateProfileRequest request) {
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + currentUserEmail));
 
         user.setName(request.getName());
         user.setPhone(request.getPhone());

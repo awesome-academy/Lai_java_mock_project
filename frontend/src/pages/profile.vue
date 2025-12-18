@@ -206,7 +206,6 @@ onMounted(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
     if (userData) {
         user.value = userData;
-        console.log('User data loaded:', user.value.name);
     } else {
         router.push('/login');
         return;

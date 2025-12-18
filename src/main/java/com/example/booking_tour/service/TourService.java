@@ -158,9 +158,8 @@ public class TourService {
         ));
     }
 
-    public Page<Tour> findByFilters(String keywords, String startDate, Pageable pageable) {
-
-        // Normalize keywords
+    public Page<Tour> findByFilters(String keywords, String startDate, Pageable pageable)
+    {
         if (keywords != null && keywords.isBlank()) {
             keywords = null;
         }
@@ -168,10 +167,14 @@ public class TourService {
         LocalDate date = null;
         LocalDateTime startDateTime = null;
 
-        // Normalize startDate
         if (startDate != null && !startDate.isBlank()) {
-            date = LocalDate.parse(startDate);
-            startDateTime = date.atStartOfDay();
+            try {
+                date = LocalDate.parse(startDate);
+                startDateTime = date.atStartOfDay();
+            } catch (Exception e) {
+                date = null;
+                startDateTime = null;
+            }
         }
 
         return tourRepository.findByFilters(
