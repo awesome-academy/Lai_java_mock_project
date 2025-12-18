@@ -5,6 +5,7 @@ import com.example.booking_tour.repository.TourImageRepository;
 import com.example.booking_tour.entity.Tour;
 import com.example.booking_tour.entity.TourImage;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -155,5 +156,32 @@ public class TourService {
                 (BigDecimal) row[2], // minPrice
                 (String) row[3] // thumbnail
         ));
+    }
+
+    public Page<Tour> findByFilters(String keywords, String startDate, Pageable pageable)
+    {
+        if (keywords != null && keywords.isBlank()) {
+            keywords = null;
+        }
+
+        LocalDate date = null;
+        LocalDateTime startDateTime = null;
+
+        if (startDate != null && !startDate.isBlank()) {
+            try {
+                date = LocalDate.parse(startDate);
+                startDateTime = date.atStartOfDay();
+            } catch (Exception e) {
+                date = null;
+                startDateTime = null;
+            }
+        }
+
+        return tourRepository.findByFilters(
+            keywords,
+            date,
+            startDateTime,
+            pageable
+        );
     }
 }

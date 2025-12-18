@@ -32,6 +32,8 @@ public class TourController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAllTours(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keywords,
+            @RequestParam(required = false) String startDate,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
         try {
             // Parse sort parameters
@@ -43,7 +45,12 @@ public class TourController {
                     : Sort.Direction.ASC;
 
             Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
-            Page<Tour> tourPage = tourService.findAll(pageable);
+            Page<Tour> tourPage;
+            if (keywords != null || startDate != null) {
+                tourPage = tourService.findByFilters(keywords, startDate, pageable);
+            } else {
+                tourPage = tourService.findAll(pageable);
+            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", tourPage.getContent());

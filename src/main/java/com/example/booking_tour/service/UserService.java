@@ -4,6 +4,7 @@ import com.example.booking_tour.dto.PasswordUpdateRequest;
 import com.example.booking_tour.dto.UserCreateRequest;
 import com.example.booking_tour.dto.UserUpdateRequest;
 import com.example.booking_tour.dto.users.RegisterRequest;
+import com.example.booking_tour.dto.users.UpdateProfileRequest;
 import com.example.booking_tour.entity.User;
 import com.example.booking_tour.repository.UserRepository;
 
@@ -14,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.booking_tour.exception.EmailAlreadyExistsException;
 import com.example.booking_tour.exception.UserNotFoundException;
-
 import java.util.Optional;
 import java.util.Collections;
 
@@ -121,5 +121,17 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public User updateUserByUser(String currentUserEmail, UpdateProfileRequest request) {
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user với email: " + currentUserEmail));
+
+        user.setName(request.getName());
+        user.setPhone(request.getPhone());
+        user.setBirthday(request.getBirthday());
+        user.setAddress(request.getAddress());
+
+        return userRepository.save(user);
     }
 }
