@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
+import com.example.booking_tour.dto.UpdateBookingRequest;
 import com.example.booking_tour.dto.users.BookingRequest;
 import com.example.booking_tour.entity.Booking;
 import com.example.booking_tour.entity.Tour;
@@ -58,6 +59,19 @@ public class BookingService {
 
     public Object findAll() {
         return bookingRepository.findAll();
+    }
+
+    public void updateBookingStatus(UpdateBookingRequest updateBookingRequest) {
+        Booking booking = bookingRepository.findById(updateBookingRequest.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found with id: " + updateBookingRequest.getId()));
+
+        try {
+            booking.setStatus(Booking.Status.valueOf(updateBookingRequest.getStatus()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid status value");
+        }
+
+        bookingRepository.save(booking);
     }
 
 }

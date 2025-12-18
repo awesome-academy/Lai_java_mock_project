@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="admin/layouts/master :: layout(~{::title}, ~{::section}, ~{::script})">
+
+<head>
+    <title th:fragment="titleFragment">Booking Management</title>
+</head>
+
+<body>
+    <section>
+        <div th:if="${success}" class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <span th:text="${error}"></span>
+        </div>
+        <div class="">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Tour</th>
+                        <th>Price</th>
+                        <th>Booking Date</th>
+                        <th>Number Of People</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td th:text="${booking.id}"></td>
+                        <td th:text="${booking.email}"></td>
+                        <td th:text="${booking.tour.title}"></td>
+                        <td th:text="${booking.total_price}"></td>
+                        <td th:text="${booking.booking_date}"></td>
+                        <td th:text="${booking.number_of_people}"></td>
+                        <td th:text="${booking.phone}"></td>
+                        <td th:text="${booking.status}"></td>
+                        <td th:text="${booking.note}"></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-default dropdown-toggle" type="button"
+                                    th:id="'dropdownMenu' + ${booking.id}" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="true">
+                                    Action <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" th:attr="aria-labelledby='dropdownMenu' + ${booking.id}">
+                                    <li>
+                                        <a type="button" th:data-booking-id="${booking.id}" th:data-booking-status="${booking.status}" class="editBooking">
+                                            Update Status
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a type="button" th:attr="data-booking-id=${booking.id}" id="deleteBooking">
+                                            Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="updateStatus" tabindex="-1" role="dialog" aria-labelledby="updateStatusLabel">
+            <form th:action="@{/admin/bookings}" method="post">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="updateStatusLabel">Update Status</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" name="id"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusSelect">Select Status:</label>
+                            <select name="status" id="statusSelect" class="form-control">
+                                <option value="PENDING">PENDING</option>
+                                <option value="CONFIRMED">CONFIRMED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="clearfix"></div>
+    </section>
+</body>
+<script th:fragment="scripts">
+    const updateStatusModal = $('#updateStatus');
+    let selectedBookingId = null;
+
+    $(document).on('click', '.editBooking', function() {
+        selectedBookingId = $(this).data('booking-id');
+        const currentStatus = $(this).data('booking-status');
+        updateStatusModal.find('input[name="id"]').val(selectedBookingId);
+        updateStatusModal.find('select[name="status"]').val(currentStatus);
+        updateStatusModal.modal('show');
+    });
+</script>
+</html>

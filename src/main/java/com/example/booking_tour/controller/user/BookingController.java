@@ -12,7 +12,7 @@ import com.example.booking_tour.dto.users.BookingRequest;
 import com.example.booking_tour.entity.Booking;
 import com.example.booking_tour.service.BookingService;
 
-@Controller
+@Controller("userBookingController")
 @RequestMapping("/api/booking")
 public class BookingController {
 
