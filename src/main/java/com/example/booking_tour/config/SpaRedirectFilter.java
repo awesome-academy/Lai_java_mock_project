@@ -17,8 +17,11 @@ public class SpaRedirectFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        // 1. Backend API requests -> Let them pass
-        if (path.startsWith("/api") || path.startsWith("/admin")) {
+        // 1. Backend API, Admin, and Swagger requests -> Let them pass
+        if (path.startsWith("/api") ||
+                path.startsWith("/admin") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui")) {
             filterChain.doFilter(request, response);
             return;
         }

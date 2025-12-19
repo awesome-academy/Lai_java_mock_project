@@ -1,11 +1,20 @@
 package com.example.booking_tour.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
+@Schema(description = "Thông tin thống kê theo địa điểm")
 public class LocationStatsDTO {
+    @Schema(description = "Tên địa điểm", example = "Đà Nẵng")
     private String location;
+
+    @Schema(description = "Số lượng tour tại địa điểm này", example = "15")
     private Long tourCount;
+
+    @Schema(description = "Giá thấp nhất của tour tại địa điểm này", example = "500000")
     private BigDecimal minPrice;
+
+    @Schema(description = "Ảnh đại diện của địa điểm", example = "danang.jpg")
     private String thumbnail;
 
     // Constructor for JPQL query
