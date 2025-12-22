@@ -31,15 +31,13 @@
         <!-- Main Content -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Sidebar Filters -->
-                <div class="lg:w-1/4">
+                <!-- <div class="lg:w-1/4">
                     <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-xl font-bold text-gray-800">Bộ lọc</h2>
                             <button id="clearFilters" class="text-sm text-blue-600 hover:text-blue-700">Xóa tất cả</button>
                         </div>
 
-                        <!-- Price Range Filter -->
                         <div class="mb-6">
                             <button class="filter-toggle w-full flex justify-between items-center py-2 font-semibold text-gray-700" data-target="priceFilter">
                                 <span>Giá tour</span>
@@ -54,7 +52,6 @@
                             </div>
                         </div>
 
-                        <!-- Duration Filter -->
                         <div class="mb-6 border-t pt-4">
                             <button class="filter-toggle w-full flex justify-between items-center py-2 font-semibold text-gray-700" data-target="durationFilter">
                                 <span>Thời gian</span>
@@ -79,8 +76,6 @@
                                 </label>
                             </div>
                         </div>
-
-                        <!-- Category Filter -->
                         <div class="mb-6 border-t pt-4">
                             <button class="filter-toggle w-full flex justify-between items-center py-2 font-semibold text-gray-700" data-target="categoryFilter">
                                 <span>Loại tour</span>
@@ -110,7 +105,6 @@
                             </div>
                         </div>
 
-                        <!-- Rating Filter -->
                         <div class="border-t pt-4">
                             <button class="filter-toggle w-full flex justify-between items-center py-2 font-semibold text-gray-700" data-target="ratingFilter">
                                 <span>Đánh giá</span>
@@ -135,10 +129,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Results Section -->
-                <div class="lg:w-3/4">
+                <div class="lg:w-4/4">
                     <!-- Results Header -->
                     <div class="bg-white rounded-lg shadow-md p-4 mb-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

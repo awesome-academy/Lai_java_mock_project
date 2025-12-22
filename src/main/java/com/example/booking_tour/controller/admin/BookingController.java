@@ -33,7 +33,7 @@ public class BookingController {
 
     @GetMapping("")
     public String index(Model model) {
-        List<Booking> bookings = bookingRepository.findAll();
+        List<Booking> bookings = bookingRepository.findAllByOrderByIdDesc();
         model.addAttribute("bookings", bookings);
 
         return "admin/bookings/index";

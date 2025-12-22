@@ -162,10 +162,10 @@
                 <p class="text-gray-600 mb-6">Mã đặt tour của bạn là: <span class="font-bold text-blue-600" id="bookingCode">{{ tourCode }}</span></p>
                 <p class="text-sm text-gray-600 mb-6">Chúng tôi đã gửi email xác nhận đến địa chỉ của bạn. Vui lòng kiểm tra hộp thư.</p>
                 <div class="flex gap-3">
-                    <button onclick="window.location.href='booking-history.html'" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
+                    <button @click="router.push('/tours/histories')" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">
                         Xem lịch sử
                     </button>
-                    <button onclick="window.location.href='index.html'" class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50">
+                    <button @click="router.push('/')" class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50">
                         Về trang chủ
                     </button>
                 </div>
@@ -178,6 +178,7 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import axios from '@/plugins/axios'
+    import { useRouter } from 'vue-router'
 
     const formData = ref({
         full_name: '',
@@ -191,7 +192,7 @@
         number_of_people: 2,
     })
     const tourCode = ref('')
-
+    const router = useRouter()
     const errors = ref({})
 
     const validate = () => {
@@ -261,6 +262,8 @@
             formData.value.tour_id = bookingData.tour.id;
             formData.value.booking_date = bookingData.startDate;
             formData.value.number_of_people = bookingData.guests;
+        } else {
+            window.location.href = '/tours';
         }
     });
 </script>

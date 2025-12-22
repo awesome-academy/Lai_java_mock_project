@@ -32,9 +32,9 @@
                     <router-link to="/profile" class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition font-medium">
                         Trang cá nhân
                     </router-link>
-                    <router-link to="/logout" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                    <button @click="handleLogout()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
                         Đăng xuất
-                    </router-link>
+                    </button>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -104,6 +104,12 @@
 
         isLogin.value = localStorage.getItem('isLogin');
         user.value = localStorage.getItem('user');
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('isLogin');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
     };
 
     onMounted(() => {
