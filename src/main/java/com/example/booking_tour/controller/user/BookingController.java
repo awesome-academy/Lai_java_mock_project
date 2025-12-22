@@ -1,12 +1,17 @@
 package com.example.booking_tour.controller.user;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.booking_tour.dto.ApiResponse;
 import com.example.booking_tour.dto.users.BookingRequest;
 import com.example.booking_tour.entity.Booking;
 import com.example.booking_tour.service.BookingService;
@@ -16,6 +21,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController("userBookingController")
 @RequestMapping("/api/booking")
@@ -59,4 +66,22 @@ public class BookingController {
                     .body(new com.example.booking_tour.dto.ApiResponse<>(false, "Lỗi khi tạo booking", null));
         }
     }
+
+    @Operation(summary = "Lịch sử đặt tours", description = "Khách hàng gửi yêu xem lịch sử đặt tours")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lấy lịch sử thành công", content = @Content(schema = @Schema(implementation = Booking.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ")
+    })
+    @GetMapping("histories")
+    public ResponseEntity<ApiResponse<List<Booking>>> histories(@AuthenticationPrincipal UserDetails userDetails) {
+        try {
+             String currentUserEmail = userDetails.getUsername();
+            return ResponseEntity.ok(
+                    new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy lịch sử đặt tour thành công!", bookingService.histories(currentUserEmail)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new com.example.booking_tour.dto.ApiResponse<>(false, "Lỗi khi lấy lịch sử đặt tour", null));
+        }
+    }
+    
 }

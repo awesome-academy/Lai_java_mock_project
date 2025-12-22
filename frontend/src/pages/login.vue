@@ -166,7 +166,7 @@
                 localStorage.setItem('token', response.data.token);
             }
 
-            router.push('/');
+            window.location.href = '/';
         } catch (error) {
             console.error('Login failed:', error);
             errorMessage.value = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại!';

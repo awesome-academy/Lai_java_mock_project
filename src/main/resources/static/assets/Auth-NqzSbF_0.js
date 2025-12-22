@@ -1,1 +1,0 @@
-import{u as t,c as o,o as n,r}from"./index-DZchovPR.js";const p={__name:"Auth",setup(a){return t({title:"Login",meta:[{name:"description",content:"Đăng nhập"}]}),(c,s)=>{const e=r("router-view");return n(),o(e)}}};export{p as default};

@@ -1,6 +1,7 @@
 package com.example.booking_tour.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,6 @@ public class BookingService {
             booking.setTotal_price(totalPrice);
             return bookingRepository.save(booking);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Lỗi khi tạo booking: " + e.getMessage());
             throw new RuntimeException("Failed to create booking", e);
         }
     }
@@ -72,6 +71,10 @@ public class BookingService {
         }
 
         bookingRepository.save(booking);
+    }
+
+    public List<Booking> histories(String email) {
+        return bookingRepository.findByUserEmailOrderByIdDesc(email);
     }
 
 }
