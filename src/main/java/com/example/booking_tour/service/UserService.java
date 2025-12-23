@@ -7,6 +7,12 @@ import com.example.booking_tour.dto.users.RegisterRequest;
 import com.example.booking_tour.dto.users.UpdateProfileRequest;
 import com.example.booking_tour.entity.User;
 import com.example.booking_tour.repository.UserRepository;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -133,5 +139,43 @@ public class UserService {
         user.setAddress(request.getAddress());
 
         return userRepository.save(user);
+    }
+
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String googleClientId;
+
+    public User loginWithGoogle(String idTokenString) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(),
+                    GsonFactory.getDefaultInstance())
+                    .setAudience(Collections.singletonList(googleClientId))
+                    .build();
+
+            GoogleIdToken idToken = verifier.verify(idTokenString);
+
+            if (idToken == null) {
+                throw new RuntimeException("Invalid Google token");
+            }
+
+            Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+
+            return userRepository.findByEmail(email).orElseGet(() -> {
+                User newUser = new User();
+                newUser.setName(name);
+                newUser.setEmail(email);
+                newUser.setAvatar(pictureUrl);
+                newUser.setRole(User.Role.USER);
+                newUser.setProvider(User.Provider.GOOGLE);
+                newUser.setPassword(null);
+                newUser.setPhone(null);
+                return userRepository.save(newUser);
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi xác thực Google: " + e.getMessage());
+        }
     }
 }

@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 
 import com.example.booking_tour.config.JwtUtils;
 import com.example.booking_tour.dto.JwtResponse;
+import com.example.booking_tour.dto.users.GoogleLoginRequest;
 import com.example.booking_tour.dto.users.LoginRequest;
 import com.example.booking_tour.dto.users.RegisterRequest;
 import com.example.booking_tour.entity.User;
@@ -134,4 +135,17 @@ public class UserAuthController {
         }
     }
 
+    @Operation(summary = "Đăng nhập bằng Google", description = "Xác thực bằng Google ID Token và nhận JWT token")
+    @PostMapping("/google")
+    public ResponseEntity<?> loginWithGoogle(@RequestBody @Valid GoogleLoginRequest req) {
+        try {
+            User user = userService.loginWithGoogle(req.getIdToken());
+            String token = jwtUtils.generateToken(user.getEmail());
+            return ResponseEntity.ok(new JwtResponse(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(401)
+                    .body(new com.example.booking_tour.dto.ApiResponse<>(false,
+                            "Xác thực Google thất bại: " + e.getMessage(), null));
+        }
+    }
 }
