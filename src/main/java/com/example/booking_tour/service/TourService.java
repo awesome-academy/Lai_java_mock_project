@@ -158,8 +158,7 @@ public class TourService {
         ));
     }
 
-    public Page<Tour> findByFilters(String keywords, String startDate, Pageable pageable)
-    {
+    public Page<Tour> findByFilters(String keywords, String startDate, Pageable pageable) {
         if (keywords != null && keywords.isBlank()) {
             keywords = null;
         }
@@ -178,10 +177,9 @@ public class TourService {
         }
 
         return tourRepository.findByFilters(
-            keywords,
-            date,
-            startDateTime,
-            pageable
-        );
+                keywords,
+                date,
+                startDateTime,
+                pageable);
     }
 }
