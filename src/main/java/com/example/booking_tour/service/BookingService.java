@@ -1,8 +1,10 @@
 package com.example.booking_tour.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.booking_tour.dto.UpdateBookingRequest;
@@ -12,6 +14,8 @@ import com.example.booking_tour.entity.Tour;
 import com.example.booking_tour.repository.BookingRepository;
 import com.example.booking_tour.repository.TourRepository;
 import com.example.booking_tour.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class BookingService {
@@ -62,7 +66,8 @@ public class BookingService {
 
     public void updateBookingStatus(UpdateBookingRequest updateBookingRequest) {
         Booking booking = bookingRepository.findById(updateBookingRequest.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found with id: " + updateBookingRequest.getId()));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Booking not found with id: " + updateBookingRequest.getId()));
 
         try {
             booking.setStatus(Booking.Status.valueOf(updateBookingRequest.getStatus()));
@@ -77,4 +82,17 @@ public class BookingService {
         return bookingRepository.findByUserEmailOrderByIdDesc(email);
     }
 
+    @Async
+    @Transactional
+    public void cancelExpiredBookings() {
+        LocalDateTime expiredTime = LocalDateTime.now().minusHours(24);
+        List<Booking> expiredBookings = bookingRepository.findExpiredBookings(Booking.Status.PENDING,
+                expiredTime);
+
+        for (Booking booking : expiredBookings) {
+            booking.setStatus(Booking.Status.CANCELLED);
+        }
+
+        bookingRepository.saveAll(expiredBookings);
+    }
 }
