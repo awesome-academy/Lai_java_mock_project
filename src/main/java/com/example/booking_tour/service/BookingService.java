@@ -22,12 +22,14 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final TourRepository tourRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public BookingService(BookingRepository bookingRepository, TourRepository tourRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     public Booking createBooking(BookingRequest request) {
@@ -54,7 +56,14 @@ public class BookingService {
             booking.setNote(request.getNote());
             booking.setStatus(Booking.Status.PENDING);
             booking.setTotal_price(totalPrice);
-            return bookingRepository.save(booking);
+            bookingRepository.save(booking);
+
+            emailService.sendBookingSuccessEmail(
+                booking.getEmail(),
+                booking.getId().toString(),
+                booking.getTour().getTitle()
+            );
+            return booking;
         } catch (Exception e) {
             throw new RuntimeException("Failed to create booking", e);
         }
