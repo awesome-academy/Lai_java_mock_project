@@ -34,6 +34,24 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
+  mail:
+    default-encoding: UTF-8
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    
 
 jwt:
   secret: ${JWT_SECRET}
