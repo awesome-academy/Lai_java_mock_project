@@ -1,38 +1,41 @@
 package com.example.booking_tour.service;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.example.booking_tour.dto.EmailMessage;
+
+/**
+ * Email service to send email through RabbitMQ message queue.
+ * Email will be pushed into queue and processed asynchronously by
+ * EmailConsumer.
+ */
 @Service
 public class EmailService {
-    private final JavaMailSender mailSender;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+    private final EmailProducer emailProducer;
+
+    public EmailService(EmailProducer emailProducer) {
+        this.emailProducer = emailProducer;
     }
 
-    @Async
-    public void sendBookingSuccessEmail(
-            String to,
-            String bookingCode,
-            String tourName
-    ) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject("Booking thành công 🎉");
-        message.setText("""
-            Xin chào,
+    /**
+     * Send booking success email.
+     * Email will be pushed into queue and processed asynchronously by
+     * EmailConsumer.
+     * 
+     * @param to          email address of recipient
+     * @param bookingCode booking code
+     */
+    public void sendBookingSuccessEmail(String to, String bookingCode, String tourName) {
+        logger.info("Đang tạo email booking success cho: {}", to);
 
-            Booking của bạn đã được xác nhận thành công!
+        EmailMessage message = EmailMessage.bookingSuccess(to, bookingCode, tourName);
+        emailProducer.sendEmailMessage(message);
 
-            Mã booking: %s
-            Tour: %s
-
-            Cảm ơn bạn đã sử dụng dịch vụ.
-            """.formatted(bookingCode, tourName));
-
-        mailSender.send(message);
+        logger.info("Email booking success đã được đẩy vào queue");
     }
 }
