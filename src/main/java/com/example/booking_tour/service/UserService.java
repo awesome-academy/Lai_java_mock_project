@@ -73,7 +73,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id, UserUpdateRequest request) {
+    public User updateUser(Integer id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -96,7 +96,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void updatePassword(Long id, PasswordUpdateRequest request) {
+    public void updatePassword(Integer id, PasswordUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -104,7 +104,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
