@@ -22,4 +22,28 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findExpiredBookings(
             @Param("status") Booking.Status status,
             @Param("expiredTime") LocalDateTime expiredTime);
+
+    @Query(value = """
+                SELECT
+                    DATE_FORMAT(created_at, '%Y-%m-%d') as period,
+                    SUM(total_price) as revenue,
+                    COUNT(id) as orderCount
+                FROM bookings
+                WHERE status = 'CONFIRMED'
+                GROUP BY period
+                ORDER BY period DESC
+            """, nativeQuery = true)
+    List<com.example.booking_tour.dto.RevenueReportProjection> getDailyRevenue();
+
+    @Query(value = """
+                SELECT
+                    DATE_FORMAT(created_at, '%Y-%m') as period,
+                    SUM(total_price) as revenue,
+                    COUNT(id) as orderCount
+                FROM bookings
+                WHERE status = 'CONFIRMED'
+                GROUP BY period
+                ORDER BY period DESC
+            """, nativeQuery = true)
+    List<com.example.booking_tour.dto.RevenueReportProjection> getMonthlyRevenue();
 }

@@ -1,0 +1,236 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="admin/layouts/master :: layout(~{::title}, ~{::section}, ~{::#page-scripts})">
+
+<head>
+    <title th:text="${title}">Báo cáo doanh thu</title>
+</head>
+
+<body>
+    <section>
+        <style>
+            .report-card {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 30px;
+                border-top: 4px solid #337ab7;
+            }
+
+            .stat-card {
+                text-align: center;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 6px;
+                margin-bottom: 20px;
+            }
+
+            .stat-card .value {
+                font-size: 24px;
+                font-weight: bold;
+                color: #337ab7;
+                display: block;
+            }
+
+            .stat-card .label {
+                color: #777;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+
+            .nav-tabs {
+                border-bottom: 2px solid #ddd;
+                margin-bottom: 20px;
+            }
+
+            .nav-tabs>li>a {
+                font-weight: 600;
+                color: #555;
+            }
+
+            .nav-tabs>li.active>a {
+                border-bottom: 3px solid #337ab7 !important;
+                color: #337ab7 !important;
+            }
+
+            .chart-container {
+                position: relative;
+                height: 400px;
+                width: 100%;
+            }
+
+            .no-data {
+                text-align: center;
+                padding: 50px;
+                color: #777;
+            }
+        </style>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-header"><i class="glyphicon glyphicon-stats"></i> Báo cáo doanh thu</h2>
+            </div>
+        </div>
+
+        <!-- Summary Row -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <span class="label">Tổng doanh thu</span>
+                    <span class="value"
+                        th:text="${#numbers.formatDecimal(#aggregates.sum(dailyReports.![revenue]) ?: 0, 0, 'COMMA', 0, 'POINT') + ' đ'}">0đ</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <span class="label">Tổng số đơn hàng</span>
+                    <span class="value" th:text="${#aggregates.sum(dailyReports.![orderCount]) ?: 0}">0</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <span class="label">Doanh thu TB / đơn</span>
+                    <span class="value"
+                        th:with="totalRev=${#aggregates.sum(dailyReports.![revenue]) ?: 0}, totalCount=${#aggregates.sum(dailyReports.![orderCount]) ?: 1}"
+                        th:text="${#numbers.formatDecimal(totalRev / (totalCount > 0 ? totalCount : 1), 0, 'COMMA', 0, 'POINT') + ' đ'}">0đ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#daily" aria-controls="daily" role="tab"
+                        data-toggle="tab">Biểu đồ theo ngày</a></li>
+                <li role="presentation"><a href="#monthly" aria-controls="monthly" role="tab" data-toggle="tab">Biểu đồ
+                        theo
+                        tháng</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="daily">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div th:if="${#lists.isEmpty(dailyReports)}" class="no-data">
+                                <h3><i class="glyphicon glyphicon-exclamation-sign"></i> Chưa có dữ liệu doanh thu theo
+                                    ngày</h3>
+                            </div>
+                            <div th:unless="${#lists.isEmpty(dailyReports)}" class="chart-container">
+                                <canvas id="dailyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="monthly">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div th:if="${#lists.isEmpty(monthlyReports)}" class="no-data">
+                                <h3><i class="glyphicon glyphicon-exclamation-sign"></i> Chưa có dữ liệu doanh thu theo
+                                    tháng</h3>
+                            </div>
+                            <div th:unless="${#lists.isEmpty(monthlyReports)}" class="chart-container">
+                                <canvas id="monthlyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block id="page-scripts">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const dailyData = /*[[${dailyReports}]]*/[];
+            const monthlyData = /*[[${monthlyReports}]]*/[];
+
+            document.addEventListener('DOMContentLoaded', function () {
+                if (dailyData.length > 0) {
+                    const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+                    new Chart(dailyCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [...dailyData].reverse().map(d => d.period),
+                            datasets: [{
+                                label: 'Doanh thu ngày (đ)',
+                                data: [...dailyData].reverse().map(d => d.revenue),
+                                borderColor: '#337ab7',
+                                tension: 0.3,
+                                fill: true,
+                                backgroundColor: 'rgba(51, 122, 183, 0.1)',
+                                borderWidth: 3,
+                                pointBackgroundColor: '#337ab7'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function (value) {
+                                            return value.toLocaleString() + ' đ';
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + ' đ';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (monthlyData.length > 0) {
+                    const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+                    new Chart(monthlyCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: [...monthlyData].reverse().map(m => m.period),
+                            datasets: [{
+                                label: 'Doanh thu tháng (đ)',
+                                data: [...monthlyData].reverse().map(m => m.revenue),
+                                backgroundColor: 'rgba(51, 122, 183, 0.8)',
+                                hoverBackgroundColor: '#337ab7'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function (value) {
+                                            return value.toLocaleString() + ' đ';
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + ' đ';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            /*]]>*/
+        </script>
+    </th:block>
+</body>
+
+</html>
