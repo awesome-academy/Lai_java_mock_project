@@ -21,8 +21,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController("userBookingController")
 @RequestMapping("/api/booking")
@@ -75,13 +73,14 @@ public class BookingController {
     @GetMapping("histories")
     public ResponseEntity<ApiResponse<List<Booking>>> histories(@AuthenticationPrincipal UserDetails userDetails) {
         try {
-             String currentUserEmail = userDetails.getUsername();
+            String currentUserEmail = userDetails.getUsername();
             return ResponseEntity.ok(
-                    new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy lịch sử đặt tour thành công!", bookingService.histories(currentUserEmail)));
+                    new com.example.booking_tour.dto.ApiResponse<>(true, "Lấy lịch sử đặt tour thành công!",
+                            bookingService.histories(currentUserEmail)));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(new com.example.booking_tour.dto.ApiResponse<>(false, "Lỗi khi lấy lịch sử đặt tour", null));
         }
     }
-    
+
 }
